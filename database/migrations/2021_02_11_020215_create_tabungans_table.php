@@ -15,6 +15,10 @@ class CreateTabungansTable extends Migration
     {
         Schema::create('tabungans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users');
+            $table->double('debit')->nullable();
+            $table->double('credit')->nullable();
+            $table->double('saldo')->default(0);
             $table->timestamps();
         });
     }
