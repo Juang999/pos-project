@@ -17,8 +17,6 @@ class TabunganController extends Controller
 
         $saldo = Tabungan::where('user_id', $id)->latest()->first();
 
-        dd($saldo);
-
         return response()->json([
             'notification' => 'berhasil',
             'message' => 'saldo member berhasil diambil',
