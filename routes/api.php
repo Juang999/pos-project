@@ -1,5 +1,6 @@
 <?php
 
+use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,10 @@ Route::get('email/resend', 'Auth/VerificationController@resend')->name('verifica
 
 Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify', 'role:1']], function () {
     Route::resource('/', 'TabunganController');
+});
+
+Route::group(['prefix' => 'kasir', 'middleware' => ['jwt.verify', 'role:2']], function () {
+    Route::resource('/', 'TransaksiController');
 });
 
 Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], function () {

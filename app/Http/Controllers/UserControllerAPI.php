@@ -27,7 +27,9 @@ class UserControllerAPI extends Controller
 
         $role = Auth::user()->role;
 
-        return response()->json(compact('token', 'role'));
+        $kode = Auth::user()->kode_member;
+
+        return response()->json(compact('token', 'role', 'kode'));
     }
 
     public function register(Request $request)
@@ -43,21 +45,25 @@ class UserControllerAPI extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        // dd($request->get('nomor_telepon'));
+        // dd($kode);
 
         $user = User::create([
             'name' => $request->get('name'),
             'nomor_telepon' => $request->get('nomor_telepon'),
             'email' => $request->get('email'),
+            'kode_member' => rand(),
             'password' => Hash::make($request->get('password')),
         ]);
 
-        $tabungan = Tabungan::insert([
+            // dd($user->kode_member);
+
+        $tabungan = Tabungan::create([
             'user_id' => $user->id
         ]);
 
         try {
             $tabungan->save();
+
         } catch (\Throwable $th) {
             return response()->json($th->getMessage());
         }
