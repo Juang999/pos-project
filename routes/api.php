@@ -33,5 +33,6 @@ Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify', 'role:1']], f
     Route::resource('/', 'TabunganController');
 });
 
-// Route::
-// group(['prefix' => 'leader', 'middleware' => []]);
+Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], function () {
+    Route::resource('/', 'JumlahControllerAPI');
+});

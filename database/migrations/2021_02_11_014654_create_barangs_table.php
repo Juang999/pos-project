@@ -15,7 +15,7 @@ class CreateBarangsTable extends Migration
     {
         Schema::create('barangs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ketegori_id')->constrained('kategoris');
+            $table->foreignId('kategori_id')->constrained('kategoris');
             $table->string('nama_barang');
             $table->bigInteger('kode_barang');
             $table->double('harga');

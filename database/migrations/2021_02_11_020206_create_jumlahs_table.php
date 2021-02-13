@@ -17,8 +17,9 @@ class CreateJumlahsTable extends Migration
             $table->id();
             $table->foreignId('barang_id')->constrained('barangs');
             $table->foreignId('supplier_id')->constrained('suppliers');
-            $table->integer('input');
-            $table->integer('output');
+            $table->integer('kode_barang_id')->unique();
+            $table->integer('input')->nullable();
+            $table->integer('output')->nullable();
             $table->integer('total');
             $table->timestamps();
         });

@@ -17,7 +17,7 @@ class CreateSuppliersTable extends Migration
             $table->id();
             $table->string('supplier');
             $table->string('alamat');
-            $table->integer('nomor_telepon');
+            $table->bigInteger('nomor_telepon');
             $table->timestamps();
         });
     }
