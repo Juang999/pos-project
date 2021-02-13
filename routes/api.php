@@ -29,6 +29,9 @@ Route::get('email/verify/{id}', 'Auth/VerificationController@verify')->name('ver
 Route::get('email/resend', 'Auth/VerificationController@resend')->name('verification.resend');
 
 
-Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify']], function () {
+Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify', 'role:1']], function () {
     Route::resource('/', 'TabunganController');
 });
+
+// Route::
+// group(['prefix' => 'leader', 'middleware' => []]);

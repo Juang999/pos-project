@@ -17,11 +17,19 @@ class UserSeeder extends Seeder
             'name' => 'Bangkit Juang Raharjo',
             'nomor_telepon' => '081325507780',
             'email' => 'juangraharjo03@gmail.com',
+            'role' => 1,
             'password' => Hash::make('Juang666'),
             ],[
             'name' => 'User1',
             'nomor_telepon' => '081325507780',
             'email' => 'User1@gmail.com',
+            'role' => 1,
+            'password' => Hash::make('12345678'),
+            ],[
+            'name' => 'Leader',
+            'nomor_telepon' => '0812345678',
+            'email' => 'Leader@gmail.com',
+            'role' => 4,
             'password' => Hash::make('12345678'),
             ],
         ]);
