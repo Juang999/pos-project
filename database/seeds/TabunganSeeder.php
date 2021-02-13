@@ -11,6 +11,14 @@ class TabunganSeeder extends Seeder
      */
     public function run()
     {
-        //
+        DB::table('tabungans')->insert([
+            [
+            'user_id' => 1,
+            'saldo' => 0,
+            ],[
+            'user_id' => 2,
+            'saldo' => 500,
+            ],
+        ]);
     }
 }

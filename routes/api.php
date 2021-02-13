@@ -25,6 +25,10 @@ Route::get('book', 'BookController@book');
 Route::get('bookall', 'BookController@bookAuth')->middleware('jwt.verify');
 Route::get('user', 'UserControllerAPI@getAuthenticatedUser')->middleware('jwt.verify');
 
+Route::get('email/verify/{id}', 'Auth/VerificationController@verify')->name('verification.verify');
+Route::get('email/resend', 'Auth/VerificationController@resend')->name('verification.resend');
+
+
 Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify']], function () {
     Route::resource('/', 'TabunganController');
 });

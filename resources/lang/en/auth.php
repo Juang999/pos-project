@@ -15,5 +15,8 @@ return [
 
     'failed' => 'These credentials do not match our records.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+    'validation_error' => 'Validation Error',
+    'invalid_email_verification_link' => 'Invalid/Expired url provided.',
+    'email_already_verified' => 'email already verified',
 
 ];
