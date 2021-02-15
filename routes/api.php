@@ -49,3 +49,6 @@ Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify', 'role:3']], fun
     Route::post('postCategory', 'StafController@postCategory');
     Route::get('getCategory', 'StafController@getCategory');
 });
+
+//hello
+
