@@ -26,8 +26,8 @@ Route::get('book', 'BookController@book');
 Route::get('bookall', 'BookController@bookAuth')->middleware('jwt.verify');
 Route::get('user', 'UserControllerAPI@getAuthenticatedUser')->middleware('jwt.verify');
 
-Route::get('email/verify/{id}', 'Auth/VerificationController@verify')->name('verification.verify');
-Route::get('email/resend', 'Auth/VerificationController@resend')->name('verification.resend');
+// Route::get('email/verify/{id}', 'Auth/VerificationController@verify')->name('verification.verify');
+// Route::get('email/resend', 'Auth/VerificationController@resend')->name('verification.resend');
 
 
 Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify', 'role:1']], function () {
@@ -40,4 +40,9 @@ Route::group(['prefix' => 'kasir', 'middleware' => ['jwt.verify', 'role:2']], fu
 
 Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], function () {
     Route::resource('/', 'JumlahControllerAPI');
+});
+
+Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify', 'role:3']], function () {
+    Route::get('/', 'StafController@index');
+    Route::post('/postSupplier', 'StafController@create');
 });

@@ -55,7 +55,7 @@ class UserControllerAPI extends Controller
             'password' => Hash::make($request->get('password')),
         ]);
 
-            // dd($user->kode_member);
+            // dd($user->kode_member);tttt
 
         $tabungan = Tabungan::create([
             'user_id' => $user->id
