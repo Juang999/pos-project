@@ -15,16 +15,14 @@ class TabunganController extends Controller
 
         // dd($id);
 
-        $saldo1 = Tabungan::latest('saldo')->first();
+        $saldo1 = Tabungan::latest('saldo')->first()->where('user_id', $id);
 
         $saldo = $saldo1->saldo;
-
-        // dd($saldo);
 
         return response()->json([
             'notification' => 'berhasil',
             'message' => 'saldo member berhasil diambil',
-            'data' => $saldo,
+            'saldo' => $saldo,
             'code' => '200',
         ]);
     }

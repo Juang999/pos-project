@@ -15,4 +15,6 @@ class Jumlah extends Model
     {
         return $this->hasMany('App\Supplier');
     }
+
+    protected $fillable = ['barang_id', 'supplier_id', 'kode_barang_id', 'input', 'output', 'total'];
 }

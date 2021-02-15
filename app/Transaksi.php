@@ -15,4 +15,6 @@ class Transaksi extends Model
     {
         return $this->hasMany('App\Barang');
     }
+
+    protected $fillable = ['member_id', 'pj', 'kode_barang', 'keterangan', 'debit', 'credit', 'saldo'];
 }

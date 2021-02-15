@@ -20,8 +20,6 @@ class CreateTransaksisTable extends Migration
             $table->foreignId('barang_id')->constrained('barangs');
             $table->bigInteger('kode_barang');
             $table->integer('keterangan');
-            $table->integer('input')->nullable();
-            $table->integer('output')->nullable();
             $table->double('debit')->nullable();
             $table->double('credit')->nullable();
             $table->double('saldo')->default(0);

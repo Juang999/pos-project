@@ -17,7 +17,7 @@ class CreateBarangsTable extends Migration
             $table->id();
             $table->foreignId('kategori_id')->constrained('kategoris');
             $table->string('nama_barang');
-            $table->bigInteger('kode_barang');
+            $table->bigInteger('kode_barang')->unique();
             $table->double('harga');
             $table->timestamps();
         });
