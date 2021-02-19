@@ -45,4 +45,6 @@ Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {
     Route::post('createGoods', 'StafController@createGoods');
     Route::post('createCategory', 'StafController@postCategory');
     Route::get('getCategory', 'StafController@getCategory');
+    Route::post('inputBarang', 'StafController@inputStuff');
+    Route::get('getBarang', 'StafController@getStuff');
 });

@@ -19,6 +19,6 @@ class checkRole
             return $next($request);
         }
 
-        return redirect('/user');
+        return response()->json('you cannot use this endpoint because');
     }
 }

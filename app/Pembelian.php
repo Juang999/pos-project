@@ -20,4 +20,6 @@ class Pembelian extends Model
     {
         return $this->hasMany('App\DetailPenjualan');
     }
+
+    protected $fillable = ['pj', 'barang_id', 'jumlah', 'harga'];
 }

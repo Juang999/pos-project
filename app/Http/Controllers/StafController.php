@@ -79,7 +79,33 @@ class StafController extends Controller
 
     public function inputStuff(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'jumlah' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 200);
+        }
+
+        $pj = Auth::user()->id;
+
+        $satuan = Barang::where('id', $request->barang_id)->first('harga');
+
+        $harga = $satuan->harga * $request->jumlah;
+
+        try {
+            $input = Pembelian::create([
+                'pj' => $pj,
+                'barang_id' => $request->barang_id,
+                'jumlah' => $request->jumlah,
+                'harga' => $harga,
+            ]);
+
+            return $this->sendResponse('berhasil', 'pesanan berhasil ditambahkan', $input, 200);
+        } catch (\Throwable $th) {
+            return $this->sendResponse('gagal', 'pesanan gagal ditambahkan', $th->getMessage(), 500);
+        }
+
     }
 
     public function postCategory(Request $request)
@@ -108,5 +134,12 @@ class StafController extends Controller
         $Kategori = Kategori::all();
 
         return $this->sendResponse('berhasil', 'kategori data berhasil ditampilkan', $Kategori, 200);
+    }
+
+    public function getStuff()
+    {
+        $barang = Barang::select('id', 'nama_barang', 'kode_barang')->get();
+
+        return $this->sendResponse('berhasil', 'data barang berhasil ditampilkan', $barang, 200);
     }
 }
