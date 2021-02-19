@@ -14,16 +14,10 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             [
-            'name' => 'User1',
-            'nomor_telepon' => '0812345678',
-            'email' => 'User1@gmail.com',
-            'role' => 1,
-            'password' => Hash::make('12345678'),
-            ],[
-            'name' => 'Leader',
+            'name' => 'owner',
             'nomor_telepon' => '0898765432',
-            'email' => 'Leader@gmail.com',
-            'role' => 4,
+            'email' => 'owner@gmail.com',
+            'role' => 5,
             'password' => Hash::make('12345678'),
             ],
         ]);

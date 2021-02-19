@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Jumlah;
 use App\Barang;
+use App\DetailPenjualan;
 use App\Kategori;
 use App\Supplier;
+use App\Keuangan;
+use App\Pembelian;
 use App\Transaksi;
-use BarangSeeder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 
@@ -45,36 +48,38 @@ class StafController extends Controller
         } catch (\Throwable $th) {
             return $this->sendResponse('gagal', 'data gagal diinputkan', $th->getMessage(), 500);
         }
-
     }
 
     public function createGoods(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'input' => 'required',
-            'debit' => 'required',
-            'saldo' => 'required',
-            'kredit' => 'required',
-            'keterangan' => 'required',
             'kategori_id' => 'required',
-            'supplier_id' => 'required',
             'nama_barang' => 'required',
             'kode_barang' => 'required',
-            'harga_satuan' => 'required',
+            'harga' => 'required',
         ]);
 
         if ($validator->fails()) {
             return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
-        }
+        };
 
-        if (count($request->nama_barang) > 0) {
-            foreach ($request as $item) {
-                $barang = [
-                    'kategori_id' => $item['kategori_id'],
-                ];
-            }
-        }
+        try {
+            $barang = Barang::create([
+                'kategori_id' => $request->kategori_id,
+                'nama_barang' => $request->nama_barang,
+                'kode_barang' => $request->kode_barang,
+                'harga' => $request->harga,
+            ]);
 
+            return $this->sendResponse('berhasil', 'barang berhasil diinputkan', $barang, 200);
+        } catch (\Throwable $th) {
+            return $this->sendResponse('gagal', 'data gagal diinputkan', $th->getMessage(), 400);
+        }
+    }
+
+    public function inputStuff(Request $request)
+    {
+        //
     }
 
     public function postCategory(Request $request)
@@ -104,5 +109,4 @@ class StafController extends Controller
 
         return $this->sendResponse('berhasil', 'kategori data berhasil ditampilkan', $Kategori, 200);
     }
-
 }

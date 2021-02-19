@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Transaksi extends Model
+class Pembelian extends Model
 {
     public function User()
     {
@@ -13,8 +13,11 @@ class Transaksi extends Model
 
     public function Barang()
     {
-        return $this->hasMany('App\Barang');
+        return $this->belongsTo('App\Barang');
     }
 
-    protected $fillable = ['member_id', 'pj', 'kode_barang', 'keterangan', 'debit', 'credit', 'saldo'];
+    public function DetailPenjualan()
+    {
+        return $this->hasMany('App\DetailPenjualan');
+    }
 }

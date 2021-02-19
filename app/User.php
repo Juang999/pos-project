@@ -45,7 +45,17 @@ class User extends Authenticatable implements JWTSubject
 
     public function Transaksi()
     {
-        return $this->hasMany();
+        return $this->hasMany('App\Transaksi');
+    }
+
+    public function Pembelian()
+    {
+        return $this->hasMany('App\Pembelian');
+    }
+
+    public function DetailPenjualan()
+    {
+        
     }
 
 }
