@@ -30,19 +30,19 @@ class UserSeeder extends Seeder
             'name' => 'role2',
             'nomor_telepon' => '08123533325',
             'email' => 'role2@gmaiil.com',
-            'role' => 1,
+            'role' => 2,
             'password' => Hash::make('12345678'),
             ],[
             'name' => 'role3',
             'nomor_telepon' => '0812353244425',
             'email' => 'role3@gmaiil.com',
-            'role' => 1,
+            'role' => 3,
             'password' => Hash::make('12345678'),
             ],[
             'name' => 'role4',
             'nomor_telepon' => '08123522233',
             'email' => 'role4@gmaiil.com',
-            'role' => 1,
+            'role' => 4,
             'password' => Hash::make('12345678'),
             ]
         ]);
