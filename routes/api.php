@@ -49,4 +49,5 @@ Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], f
 Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {
     Route::post('postSupplier', 'StafController@create');
     Route::post('createGoods', 'StafController@createGoods');
+    Route::post('createCategory', 'StafController@postCategory');
 });
