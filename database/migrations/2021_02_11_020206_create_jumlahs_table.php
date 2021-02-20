@@ -16,11 +16,10 @@ class CreateJumlahsTable extends Migration
         Schema::create('jumlahs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('barang_id')->constrained('barangs');
-            $table->foreignId('supplier_id')->constrained('suppliers');
-            $table->integer('kode_barang_id')->unique();
+            $table->foreignId('supplier_id')->nullable()->constrained('suppliers');
             $table->integer('input')->nullable();
             $table->integer('output')->nullable();
-            $table->integer('total');
+            $table->integer('total')->default(0);
             $table->timestamps();
         });
     }

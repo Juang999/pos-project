@@ -71,13 +71,17 @@ class StafController extends Controller
                 'harga' => $request->harga,
             ]);
 
+            $jumlah = Jumlah::create([
+                'barang_id' => $barang->id,
+            ]);
+
             return $this->sendResponse('berhasil', 'barang berhasil diinputkan', $barang, 200);
         } catch (\Throwable $th) {
             return $this->sendResponse('gagal', 'data gagal diinputkan', $th->getMessage(), 400);
         }
     }
 
-    public function inputStuff(Request $request)
+    public function buyStuff(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'jumlah' => 'required',
@@ -142,4 +146,26 @@ class StafController extends Controller
 
         return $this->sendResponse('berhasil', 'data barang berhasil ditampilkan', $barang, 200);
     }
+
+    public function getTotal()
+    {
+        $pj = Auth::user()->id;
+
+        $pembelian = Pembelian::where('pj', $pj)->where('status', 0)->with('Barang')->get();
+
+        $total = $pembelian->sum('harga');
+
+        $Total = [
+            'item' => $pembelian,
+            'total harga' => $total,
+        ];
+
+        return $this->sendResponse('berhasil', 'harga barang berhasil diambil', $Total, 200);
+    }
+
+    public function payTotal()
+    {
+        //
+    }
+
 }

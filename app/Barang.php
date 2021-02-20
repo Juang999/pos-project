@@ -22,4 +22,5 @@ class Barang extends Model
     {
         return $this->hasMany('App\PembelianP');
     }
+
 }
