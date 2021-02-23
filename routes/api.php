@@ -41,13 +41,13 @@ Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], f
 });
 
 Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {
-    Route::post('postSupplier', 'StafController@create');
-    Route::post('createGoods', 'StafController@createGoods');
+    Route::post('createSupplier', 'StafController@create');
+    Route::post('createBarang', 'StafController@createBarang');
+    Route::post('createCategory', 'StafController@postCategory');
     Route::post('buyStuff', 'StafController@buyStuff');
     Route::get('getTotal', 'StafController@getTotal');
     Route::patch('payTotal', 'StafController@payTotal');
-    Route::post('createCategory', 'StafController@postCategory');
     Route::get('getCategory', 'StafController@getCategory');
-    Route::get('getBarang', 'StafController@getStuff');
+    Route::get('getBarang', 'StafController@getBarang');
 
 });

@@ -21,5 +21,10 @@ class Pembelian extends Model
         return $this->hasMany('App\DetailPenjualan');
     }
 
+    public function Supplier()
+    {
+        return $this->belongsTo('App\Supplier');
+    }
+
     protected $fillable = ['pj', 'barang_id', 'jumlah', 'harga'];
 }

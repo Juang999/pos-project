@@ -12,4 +12,14 @@ class Supplier extends Model
     {
         return $this->belongsTo('App\Jumlah');
     }
+
+    public function Pembelian()
+    {
+        return $this->hasMany('App\Barang');
+    }
+
+    public function Barang()
+    {
+        return $this->hasMany('App\Barang');
+    }
 }

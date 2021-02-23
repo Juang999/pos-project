@@ -16,7 +16,6 @@ class CreateJumlahsTable extends Migration
         Schema::create('jumlahs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('barang_id')->constrained('barangs');
-            $table->foreignId('supplier_id')->nullable()->constrained('suppliers');
             $table->integer('input')->nullable();
             $table->integer('output')->nullable();
             $table->integer('total')->default(0);

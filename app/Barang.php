@@ -23,4 +23,9 @@ class Barang extends Model
         return $this->hasMany('App\PembelianP');
     }
 
+    public function Supplier()
+    {
+        return $this->belongsTo('App\Supplier');
+    }
+
 }

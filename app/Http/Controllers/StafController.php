@@ -50,7 +50,7 @@ class StafController extends Controller
         }
     }
 
-    public function createGoods(Request $request)
+    public function createBarang(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'kategori_id' => 'required',
@@ -140,7 +140,7 @@ class StafController extends Controller
         return $this->sendResponse('berhasil', 'kategori data berhasil ditampilkan', $Kategori, 200);
     }
 
-    public function getStuff()
+    public function getBarang()
     {
         $barang = Barang::select('id', 'nama_barang', 'kode_barang')->get();
 
@@ -165,7 +165,38 @@ class StafController extends Controller
 
     public function payTotal()
     {
-        //
+        $pj = Auth::user()->id;
+
+        $barang = Pembelian::where('pj', $pj)->where('status', 0)->get();
+
+        foreach ($barang as $key) {
+            $kotor = Jumlah::where('barang_id', $key['barang_id'])->first('total');
+
+            $total = $kotor->total + $key['jumlah'];
+
+            try {
+                $jumlah = Jumlah::create([
+                    'barang_id' => $key['barang_id'],
+                    'input' => $key['jumlah'],
+                    'total' => $total,
+                    
+                ]);
+
+            } catch (\Throwable $th) {
+                return $this->sendResponse('gagal', 'jumlah barang gagal di inputkan', $th->getMessage(), 500);
+            }
+
+            foreach ($vbarang as $item) {
+                $barang = Pembelian::where('pj', $pj)->where('status', 0)->first();
+                
+
+                try {
+                    
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
+            }
+        }
     }
 
 }

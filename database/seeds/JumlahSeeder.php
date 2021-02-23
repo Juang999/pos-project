@@ -14,19 +14,16 @@ class JumlahSeeder extends Seeder
         DB::table('jumlahs')->insert([
         [
             'barang_id' => '1',
-            'supplier_id' => 1,
             'input' => 5,
             'output' => 0,
             'total' => 5,
         ],[
             'barang_id' => '2',
-            'supplier_id' => 1,
             'input' => 5,
             'output' => 0,
             'total' => 5,
         ],[
             'barang_id' => '3',
-            'supplier_id' => 1,
             'input' => 5,
             'output' => 0,
             'total' => 5,
