@@ -20,7 +20,7 @@ class Barang extends Model
 
     public function Pembelian()
     {
-        return $this->hasMany('App\PembelianP');
+        return $this->hasMany('App\Pembelian');
     }
 
     public function Supplier()

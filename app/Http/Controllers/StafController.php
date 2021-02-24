@@ -104,7 +104,7 @@ class StafController extends Controller
                 'barang_id' => $request->barang_id,
                 'jumlah' => $request->jumlah,
                 'harga' => $harga,
-            ]);
+            ])->with('Barang')->first();
 
             return $this->sendResponse('berhasil', 'pesanan berhasil ditambahkan', $input, 200);
         } catch (\Throwable $th) {
@@ -168,7 +168,7 @@ class StafController extends Controller
     {
         $pj = Auth::user()->id;
 
-        $barang = Pembelian::where('pj', $pj)->where('status', 0)->get();
+        $barang = Pembelian::where('pj', $pj)->where('status', 0)->with('Barang')->get();
 
         $test = $barang->sum('harga');
 
@@ -207,9 +207,14 @@ class StafController extends Controller
             return $data->id;
         });
 
-        $result = Pembelian::whereIn('id',$ids)->get();
+        $result = Pembelian::whereIn('id',$ids)->with('Barang')->get();
 
-        return $this->sendResponse('berhasil', 'pembelian sukses dibayar', $result, 200);
+        $Total = [
+            'item' => $result,
+            'total harga' => $test,
+        ];
+
+        return $this->sendResponse('berhasil', 'pembelian sukses dibayar', $Total, 200);
     }
 
     public function getRiwayat()
