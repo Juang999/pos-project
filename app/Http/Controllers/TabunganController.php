@@ -1,29 +1,15 @@
-<?php
+<?php namespace App\Http\Controllers; use App\User; use App\Tabungan; use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; class TabunganController extends Controller
+{ public function index() { $id=A uth::id(); // dd($id); $saldo1=T abungan::where(
+'user_id', $id)->latest()->first('saldo'); $saldo = $saldo1->saldo; return response()->json([ 'notification'
+=> 'berhasil', 'message' => 'saldo member berhasil diambil', 'saldo' => $saldo,
+'code' => '200', ]); } }
 
-namespace App\Http\Controllers;
-
-use App\User;
-use App\Tabungan;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
-class TabunganController extends Controller
-{
-    public function index()
-    {
-        $id = Auth::id();
-
-        // dd($id);
-
-        $saldo1 = Tabungan::latest('saldo')->first()->where('user_id', $id);
-
-        $saldo = $saldo1->saldo;
-
-        return response()->json([
-            'notification' => 'berhasil',
-            'message' => 'saldo member berhasil diambil',
-            'saldo' => $saldo,
-            'code' => '200',
-        ]);
-    }
-}
+<!--
+Visual Code Mobile
+Developed By Manish Nirmal
+App Available on Play Store :-
+https://play.google.com/store/apps/details?id=lk.visual.code.mobile
+YouTube :-
+https://youtube.com/ManishNirmal
+-->
