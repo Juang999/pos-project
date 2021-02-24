@@ -170,6 +170,18 @@ class StafController extends Controller
 
         $barang = Pembelian::where('pj', $pj)->where('status', 0)->get();
 
+        $test = $barang->sum('harga');
+
+        $akhir = Keuangan::latest()->first('saldo');
+
+        $saldo = $akhir->saldo - $test;
+
+        $keuangan = Keuangan::create([
+            'pj' => $pj,
+            'debit' => $test,
+            'saldo' => $saldo,
+        ]);
+
         foreach ($barang as $key) {
             $kotor = Jumlah::where('barang_id', $key['barang_id'])->first('total');
 
@@ -198,6 +210,15 @@ class StafController extends Controller
         $result = Pembelian::whereIn('id',$ids)->get();
 
         return $this->sendResponse('berhasil', 'pembelian sukses dibayar', $result, 200);
+    }
+
+    public function getRiwayat()
+    {
+        $pj = Auth::user()->id;
+
+        $riwayat = Pembelian::where('pj', $pj)->get();
+
+        return $this->sendResponse('berhasil', 'riwayat pembelian berhasil ditampilkan', $riwayat, 200);
     }
 
   

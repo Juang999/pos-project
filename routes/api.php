@@ -49,5 +49,6 @@ Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {
     Route::patch('payTotal', 'StafController@payTotal');
     Route::get('getCategory', 'StafController@getCategory');
     Route::get('getBarang', 'StafController@getBarang');
+    Route::get('getRiwayat', 'StafController@getRiwayat');
 
 });
