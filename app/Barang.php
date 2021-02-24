@@ -28,4 +28,9 @@ class Barang extends Model
         return $this->belongsTo('App\Supplier');
     }
 
+    public function Penjualan()
+    {
+        return $this->hasMany('App\Penjualan');
+    }
+
 }
