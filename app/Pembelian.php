@@ -26,5 +26,5 @@ class Pembelian extends Model
         return $this->belongsTo('App\Supplier');
     }
 
-    protected $fillable = ['pj', 'barang_id', 'jumlah', 'harga'];
+    protected $fillable = ['pj', 'status', 'barang_id', 'jumlah', 'harga'];
 }

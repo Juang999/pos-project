@@ -13,6 +13,7 @@ use App\Transaksi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 
 class StafController extends Controller
@@ -179,24 +180,25 @@ class StafController extends Controller
                     'barang_id' => $key['barang_id'],
                     'input' => $key['jumlah'],
                     'total' => $total,
-                    
                 ]);
 
+                $update = Pembelian::where('id', $key['id'])->first();
+
+                $update->update(['status' =>1]);
+            
             } catch (\Throwable $th) {
                 return $this->sendResponse('gagal', 'jumlah barang gagal di inputkan', $th->getMessage(), 500);
             }
-
-            foreach ($vbarang as $item) {
-                $barang = Pembelian::where('pj', $pj)->where('status', 0)->first();
-                
-
-                try {
-                    
-                } catch (\Throwable $th) {
-                    //throw $th;
-                }
-            }
         }
+
+        $ids = $barang->map(function ($data) {
+            return $data->id;
+        });
+
+        $result = Pembelian::whereIn('id',$ids)->get();
+
+        return $this->sendResponse('berhasil', 'pembelian sukses dibayar', $result, 200);
     }
 
+  
 }
