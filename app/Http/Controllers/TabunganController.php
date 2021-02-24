@@ -15,7 +15,7 @@ class TabunganController extends Controller
 
         // dd($id);
 
-        $saldo1 = Tabungan::latest('saldo')->first()->where('user_id', $id);
+        $saldo1 = Tabungan::where('user_id', $id)->latest('saldo')->first('saldo');
 
         $saldo = $saldo1->saldo;
 
