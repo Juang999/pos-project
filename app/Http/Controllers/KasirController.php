@@ -7,6 +7,7 @@ use App\Barang;
 use App\Kategori;
 use App\Supplier;
 use App\Keuangan;
+use App\Tabungan;
 use App\Pembelian;
 use App\Transaksi;
 use App\Penjualan;
@@ -136,5 +137,58 @@ class KasirController extends Controller
         ];
 
         return $this->sendResponse('berhasil', 'data berhasil diinputkan', $Total, 200);
+    }
+
+    public function payMember(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'member_id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
+        }
+
+         $tabungan = Tabungan::where('user_id', $request->member_id)->latest()->first('saldo');
+
+         $pj = Auth::user()->id;
+
+         $belanja = Penjualan::where('pj', $pj)->where('status', 0)->get();
+        
+         $total_harga = $belanja->sum('harga');
+
+         $saldo_member = $tabungan->saldo - $total_harga;
+
+         $credit_member = Tabungan::create([
+             'user_id' => $request->member_id,
+             'credit' => $total_harga,
+             'saldo' => $saldo_member,
+         ]);
+
+         $saldo_keuangan = Keuangan::latest()->first('saldo');
+
+         $saldo_akhir = $saldo_keuangan + $total_harga;
+
+         $debit_keuangan = keuangan::create([
+             'pj' => $pj,
+             'debit' => $total_harga,
+             'saldo' => $saldo_akhir,
+         ]);
+
+         foreach ($belanja as $key) {
+             $belanjaan = Jumlah::where('barang_id', $key['berangO_id'])->first('total');
+
+             $total_barang = $belanjaan->total - $key['jumlah'];
+
+             $Total_barangp[$kunci] = [
+                'barang_id' => $key['barang_id'],
+             ];
+         }
+
+    }
+
+    public function inputSaldoMember(Request $request)
+    {
+
     }
 }

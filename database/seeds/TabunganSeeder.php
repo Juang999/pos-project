@@ -13,7 +13,7 @@ class TabunganSeeder extends Seeder
     {
         DB::table('tabungans')->insert([
             [
-            'user_id' => 1,
+            'user_id' => 2,
             'debit' => 2000000,
             'saldo' => 2000000,
             ]
