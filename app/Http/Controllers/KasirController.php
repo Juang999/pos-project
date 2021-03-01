@@ -110,7 +110,7 @@ class KasirController extends Controller
             try {
                 $jumlah = Jumlah::create([
                     'barang_id' => $key['barang_id'],
-                    'input' => $key['input'],
+                    'output' => $key['input'],
                     'total' => $jumlah,
                 ]);
 
@@ -182,7 +182,23 @@ class KasirController extends Controller
 
              $Total_barangp[$kunci] = [
                 'barang_id' => $key['barang_id'],
+                'output' => $key['jumlah'],
+                'jumlah' => $Total_barang,
              ];
+
+             $update = Penjualan::where('id', $key['id'])->first();
+
+             try {
+                 
+                 $update->update([
+                    'member_id' => $request->member_id, 
+                    'status' => 1,
+                 ]);
+
+             } catch (\Throwable $th) {
+                return $this->sendResponse('gagal', 'data gagal diupdate', $th->getMessage(), 500);
+             }
+
          }
 
     }
