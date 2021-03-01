@@ -15,6 +15,6 @@ class Penjualan extends Model
 
     public function Barang()
     {
-        return $this->belongsTo('App\Barang');
+        return $this->hasMany('App\Barang', 'id', 'barang_id');
     }
 }

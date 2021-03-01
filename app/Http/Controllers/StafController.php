@@ -104,9 +104,11 @@ class StafController extends Controller
                 'barang_id' => $request->barang_id,
                 'jumlah' => $request->jumlah,
                 'harga' => $harga,
-            ])->with('Barang')->first();
+            ]);
 
-            return $this->sendResponse('berhasil', 'pesanan berhasil ditambahkan', $input, 200);
+            $data = Pembelian::with('Barang')->find($input->id);
+
+            return $this->sendResponse('berhasil', 'pesanan berhasil ditambahkan', $data, 200);
         } catch (\Throwable $th) {
             return $this->sendResponse('gagal', 'pesanan gagal ditambahkan', $th->getMessage(), 500);
         }
@@ -178,7 +180,7 @@ class StafController extends Controller
 
         $keuangan = Keuangan::create([
             'pj' => $pj,
-            'debit' => $test,
+            'credit' => $test,
             'saldo' => $saldo,
         ]);
 

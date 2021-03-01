@@ -35,6 +35,7 @@ Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify', 'role:1']], f
 Route::group(['prefix' => 'kasir', 'middleware' => ['jwt.verify', 'role:2']], function () {
     Route::post('Store', 'KasirController@Store');
     Route::get('getTotal', 'KasirController@getTotal');
+    Route::patch('payTotal', 'KasirController@payTotal');
 });
 
 Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], function () {
