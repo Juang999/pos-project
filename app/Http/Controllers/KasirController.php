@@ -180,7 +180,7 @@ class KasirController extends Controller
 
              $total_barang = $belanjaan->total - $key['jumlah'];
 
-             $Total_barangp[$kunci] = [
+             $Total_barang[$kunci] = [
                 'barang_id' => $key['barang_id'],
                 'output' => $key['jumlah'],
                 'jumlah' => $Total_barang,
@@ -199,6 +199,14 @@ class KasirController extends Controller
                 return $this->sendResponse('gagal', 'data gagal diupdate', $th->getMessage(), 500);
              }
 
+         }
+
+         try {
+             
+             $total_barang1 = Jumlah::insert($Total_barang);
+         } catch (\Throwable $th) {
+             
+            return $this->sendResponse('gagal', 'data gagal input', $th->getMessage(), 500);
          }
 
     }
