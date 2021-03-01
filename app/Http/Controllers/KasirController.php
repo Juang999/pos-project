@@ -209,6 +209,17 @@ class KasirController extends Controller
             return $this->sendResponse('gagal', 'data gagal input', $th->getMessage(), 500);
          }
 
+         $ids = $belanja->map(function($data) {
+            return $data->id;
+         });
+
+         $result = [
+            'item' => $result,
+            'total' => $total_harga,
+            'uang' => $total_harga,
+            
+         ];
+
     }
 
     public function inputSaldoMember(Request $request)
