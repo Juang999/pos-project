@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Jumlah;
 use App\Barang;
 use App\Kategori;
@@ -157,6 +158,10 @@ class KasirController extends Controller
         
          $total_harga = $belanja->sum('harga');
 
+         if ($total_harga > $tabungan->saldo) {
+             return response()->json('saldo member tidak mencukupi!!!');
+         }
+
          $saldo_member = $tabungan->saldo - $total_harga;
 
          $credit_member = Tabungan::create([
@@ -167,7 +172,7 @@ class KasirController extends Controller
 
          $saldo_keuangan = Keuangan::latest()->first('saldo');
 
-         $saldo_akhir = $saldo_keuangan + $total_harga;
+         $saldo_akhir = $saldo_keuangan->saldo + $total_harga;
 
          $debit_keuangan = keuangan::create([
              'pj' => $pj,
@@ -176,19 +181,19 @@ class KasirController extends Controller
          ]);
 
          foreach ($belanja as $key) {
-             $belanjaan = Jumlah::where('barang_id', $key['berangO_id'])->first('total');
+             $belanjaan = Jumlah::where('barang_id', $key['barang_id'])->first('total');
 
              $total_barang = $belanjaan->total - $key['jumlah'];
+             try {
 
-             $Total_barang[$kunci] = [
+             $Total_semua_barang = Jumlah::create([
                 'barang_id' => $key['barang_id'],
                 'output' => $key['jumlah'],
-                'jumlah' => $Total_barang,
-             ];
+                'jumlah' => $total_barang,
+             ]);
 
              $update = Penjualan::where('id', $key['id'])->first();
 
-             try {
                  
                  $update->update([
                     'member_id' => $request->member_id, 
@@ -201,29 +206,50 @@ class KasirController extends Controller
 
          }
 
-         try {
-             
-             $total_barang1 = Jumlah::insert($Total_barang);
-         } catch (\Throwable $th) {
-             
-            return $this->sendResponse('gagal', 'data gagal input', $th->getMessage(), 500);
-         }
-
          $ids = $belanja->map(function($data) {
             return $data->id;
          });
 
-         $result = [
+         $result = Penjualan::whereIn('id', $ids)->with('Barang')->get();
+
+         $data = [
             'item' => $result,
             'total' => $total_harga,
             'uang' => $total_harga,
-            
          ];
+
+         return $this->sendResponse('berhasil', 'transaksi berhasil', $data, 200);
 
     }
 
     public function inputSaldoMember(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'kode_member' => 'required',
+            'input_saldo' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
+        }
+
+        $id_member = User::where('kode_member', $request->kode_member)->first();
+
+        $saldo_akhir = Tabungan::where('user_id', $id_member->id)->latest()->first('saldo');
+
+        $tambah_saldo = $saldo_akhir->saldo + $request->input_saldo;
+
+        try {
+            $tambah_saldo_akhir = Tabungan::create([
+                'user_id' => $id_member->id,
+                'debit' => $request->input_saldo,
+                'saldo' => $tambah_saldo,
+            ]);
+
+            return $this->sendResponse('berhasil', 'berhasil menambahkan saldo member', $tambah_saldo_akhir, 200);
+        } catch (\Throwable $th) {
+            return $this->sendResponse('gagal', 'gagal menambahkan saldo member', $th->getMessage(), 500);
+        }
 
     }
 }
