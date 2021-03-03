@@ -16,7 +16,7 @@ class Barang extends Model
         return $this->hasMany('App\Kategori');
     }
 
-    protected $fillable = ['kategori_id', 'nama_barang', 'kode_barang', 'harga'];
+    protected $fillable = ['kategori_id', 'supplier_id', 'nama_barang', 'barcode', 'harga_beli', 'harga_jual'];
 
     public function Pembelian()
     {
@@ -31,6 +31,11 @@ class Barang extends Model
     public function Penjualan()
     {
         return $this->hasMany('App\Penjualan');
+    }
+
+    public function Jumlah()
+    {
+        return $this->belongsTo('App\Jumlah');
     }
 
 }

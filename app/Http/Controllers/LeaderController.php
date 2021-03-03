@@ -12,14 +12,14 @@ class LeaderController extends Controller
 {
     public function getTransPenjualan()
     {
-        $transPenjualan = Penjualan::where('status', 1)->get();
+        $transPenjualan = Penjualan::where('status', 1)->with('Barang')->get();
 
         return $this->sendResponse('berhasil', 'history transaksi penjualan berhasil ditampilkan', $transPenjualan, 200);
     }
 
     public function getTransPembelian()
     {
-        $transPembelian = Pembelian::where('status', 1)->get();
+        $transPembelian = Pembelian::where('status', 1)->with('Barang')->get();
 
         return $this->sendResponse('berhasil', 'history transaksi pembelian berhasil ditampilkan', $transPembelian, 200);
     }

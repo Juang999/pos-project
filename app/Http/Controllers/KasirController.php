@@ -190,7 +190,11 @@ class KasirController extends Controller
                     'total' => $jumlah,
                 ]);
 
-                $update = Penjualan::where('id', $key['id'])->where('status', 0)->update(['status' => 1]);
+                $update = Penjualan::where('id', $key['id'])->where('status', 0)
+                ->update([
+                    'member_id' => $request->member_id,
+                    'status' => 1,
+                ]);
 
             } catch (\Throwable $th) {
                 return $this->sendResponse('gagal', 'data belanja gagal di update', $th->getMessage(), 500);

@@ -10,8 +10,7 @@ class BarangController extends Controller
 {
     public function getJumlah()
     {
-        $jumlah_barang = Barang::select('barangs.id', 'barangs.nama_barang', 'barangs.kode_barang')
-        ->leftJoin('jumlahs', 'barangs.id', '=', 'jumlahs.barang_id')->latest('jumlahs.total')->first();
+        $jumlah_barang = Barang::with('Jumlah')->latest()->first();
 
         dd($jumlah_barang);
     }
