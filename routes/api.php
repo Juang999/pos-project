@@ -54,10 +54,11 @@ Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {
     Route::post('create-stuff', 'StafController@createBarang');
     Route::post('create-category', 'StafController@postCategory');
     Route::post('buy-stuff', 'StafController@buyStuff');
-    Route::get('get-total', 'StafController@getTotal');
     Route::patch('pay-total', 'StafController@payTotal');
+    Route::get('get-total', 'StafController@getTotal');
     Route::get('get-category', 'StafController@getCategory');
     Route::get('get-barang', 'StafController@getBarang');
     Route::get('get-riwayat', 'StafController@getRiwayat');
+    Route::get('get-supplier', 'StafController@index');
 
 });
