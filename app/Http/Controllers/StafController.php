@@ -145,7 +145,7 @@ class StafController extends Controller
 
     public function getBarang()
     {
-        $barang = Barang::select('id', 'nama_barang', 'kode_barang')->get();
+        $barang = Barang::select('id', 'nama_barang', 'barcode')->get();
 
         return $this->sendResponse('berhasil', 'data barang berhasil ditampilkan', $barang, 200);
     }
@@ -217,55 +217,6 @@ class StafController extends Controller
 
         return $this->sendResponse('berhasil', 'transaksi berhasil', $Total, 200);
 
-        // $pj = Auth::user()->id;
-
-        // $barang = Pembelian::where('pj', $pj)->where('status', 0)->with('Barang')->get();
-
-        // $test = $barang->sum('harga');
-
-        // $akhir = Keuangan::latest()->first('saldo');
-
-        // $saldo = $akhir->saldo - $test;
-
-        // $keuangan = Keuangan::create([
-        //     'pj' => $pj,
-        //     'credit' => $test,
-        //     'saldo' => $saldo,
-        // ]);
-
-        // foreach ($barang as $key) {
-        //     $kotor = Jumlah::where('barang_id', $key['barang_id'])->first('total');
-
-        //     $total = $kotor->total + $key['jumlah'];
-
-        //     try {
-        //         $jumlah = Jumlah::create([
-        //             'barang_id' => $key['barang_id'],
-        //             'input' => $key['jumlah'],
-        //             'total' => $total,
-        //         ]);
-
-        //         $update = Pembelian::where('id', $key['id'])->first();
-
-        //         $update->update(['status' =>1]);
-            
-        //     } catch (\Throwable $th) {
-        //         return $this->sendResponse('gagal', 'jumlah barang gagal di inputkan', $th->getMessage(), 500);
-        //     }
-        // }
-
-        // $ids = $barang->map(function ($data) {
-        //     return $data->id;
-        // });
-
-        // $result = Pembelian::whereIn('id',$ids)->with('Barang')->get();
-
-        // $Total = [
-        //     'item' => $result,
-        //     'total harga' => $test,
-        // ];
-
-        // return $this->sendResponse('berhasil', 'pembelian sukses dibayar', $Total, 200);
     }
 
     public function getRiwayat()

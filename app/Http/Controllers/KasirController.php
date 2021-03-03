@@ -22,42 +22,36 @@ class KasirController extends Controller
 {
     public function Store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'jumlah' => 'required',
-            'kode_barang' => 'required',
-        ]);
 
-        if ($validator->fails()) {
-            return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 501);
-        }
+        $validator = Validator::make($request->all(), [
+            'barcode' => 'required',
+            'jumlah' => 'required',
+        ]);
 
         $pj = Auth::user()->id;
 
-        $barang_id1 = Barang::where('kode_barang', $request->kode_barang)->first();
+        if ($validator->fails()) {
+            return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
+        }
 
-        // dd($barang_id1);
+        $id_barang = Barang::where('barcode', $request->barcode)->first();
 
-        $barang_id = $barang_id1->id;
-
-        $harga = $barang_id1->harga * $request->jumlah;
+        $harga = $id_barang->harga_jual * $request->jumlah;
 
         try {
-            $belanja = Penjualan::create([
+
+            $barang = Penjualan::create([
                 'pj' => $pj,
-                'barang_id' => $barang_id,
-                'kode_barang' => $request->kode_barang,
+                'barang_id' => $id_barang->id,
                 'jumlah' => $request->jumlah,
                 'harga' => $harga,
-            ]);
+                ]);
 
-            $Belanja = [
-                'item' => $belanja,
-                'barang' => Barang::where('kode_barang', $belanja->kode_barang)->get(),
-            ];
+                $result = Penjualan::with('Barang')->find($barang->id);
 
-            return $this->sendResponse('berhasil', 'barang belanja berhasil diinputkan ke table', $Belanja, 200);
+            return $this->sendResponse('berhasil', 'transaksi berhasil dimasukkan kedalam keranjang', $result, 200);
         } catch (\Throwable $th) {
-            return $this->sendResponse('gagal', 'barang belanja gagal diinputkan ke table', $th->getMessage(), 500);
+            return $this->sendResponse('gagal', 'transaksi gagal dimasukkan kedalam keranjang', $th->getMessage(), 500);
         }
 
     }
@@ -82,64 +76,66 @@ class KasirController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'total_uang' => 'required',
+            'total_uang' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse('gagal', 'transaksi gagal divalidasi', $validator->errors(), 500);
+        }
 
         $pj = Auth::user()->id;
 
-        $belanja = Penjualan::where('pj', $pj)->where('status', 0)->with('Barang')->get();
+        $barang = Penjualan::where('pj', $pj)->where('status', 0)->get();
 
-        $total = $belanja->sum('harga');
+        $total_harga = $barang->sum('harga');
 
-        $kembali = $request->total_uang - $total;
+        $keuangan = Keuangan::latest()->first('saldo');
 
-        $akhir = Keuangan::latest()->first('saldo');
+        $kembali = $request->total_uang - $total_harga;
 
-        $saldo = $akhir->saldo + $total;
+        $tambahan = $keuangan->saldo + $total_harga;
 
-        $keuangan = Keuangan::create([
+        $input_keuntungan = Keuangan::create([
             'pj' => $pj,
-            'debit' => $total,
-            'saldo' => $saldo,
+            'input' => $total_harga,
+            'saldo' => $tambahan,
         ]);
 
-        foreach ($belanja as $key) {
-            $barang = Jumlah::where('barang_id', $key['barang_id'])->latest()->first('total');
+        foreach ($barang as $key) {
+            $barangUpdate = Barang::where('id', $key['barang_id'])->first('jumlah');
 
-            $jumlah = $barang->total - $key['jumlah'];
+            $kurang = $barangUpdate->jumlah - $key['jumlah'];
 
             try {
-                $jumlah = Jumlah::create([
-                    'barang_id' => $key['barang_id'],
-                    'output' => $key['jumlah'],
-                    'total' => $jumlah,
-                ]);
+                $update_barang = Barang::where('id', $key['barang_id'])->update(['jumlah' => $kurang]);
 
-                $update = Penjualan::where('id', $key['id'])->where('status', 0)->update(['status' => 1]);
+                $update = Penjualan::where('id', $key['id'])->update(['status' => 1]);
 
             } catch (\Throwable $th) {
-                return $this->sendResponse('gagal', 'data gagal diinputkan', $th->getMessage(), 500);
+                return $this->sendResponse('gagal', 'transaksi gagal di lakukan', $th->getMessage(), 500);
             }
-        }         
+        }
 
-        $ids = $belanja->map(function($data) {
+        $ids = $barang->map(function($data){
             return $data->id;
         });
 
         $result = Penjualan::whereIn('id', $ids)->with('Barang')->get();
 
-        $Total = [
+        $data = [
             'item' => $result,
-            'total' => $total,
-            'uang' => $request->total_uang,
+            'total' => $total_harga,
+            'total_uang' => $request->total_uang,
             'kembali' => $kembali,
         ];
 
-        return $this->sendResponse('berhasil', 'data berhasil diinputkan', $Total, 200);
+        return $this->sendResponse('berhasil', 'penjualan berhasil', $data, 200);
+
     }
 
     public function payMember(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'member_id' => 'required',
         ]);
@@ -150,70 +146,69 @@ class KasirController extends Controller
 
         $pj = Auth::user()->id;
 
+        $barang_belanja = Penjualan::where('pj', $pj)->where('status', 0)->get();
+
+        $total_harga = $barang_belanja->sum('harga');
+        
         $saldo_member = Tabungan::where('user_id', $request->member_id)->latest()->first('saldo');
 
-        $total_belanja = Penjualan::where('pj', $pj)->where('status', 0)->get();
-
-        $total_harga = $total_belanja->sum('harga');
-
         if ($total_harga > $saldo_member->saldo) {
-            return response()->json('saldo anda tidak mencukupi!!!');
+            return response()->json('saldo anda tidak mencukupi');
         }
 
-        $harga_akhir = $saldo_member->saldo - $total_harga;
+        $saldo_akhir = $saldo_member->saldo - $total_harga;
 
-        $saldo_baru_member = Tabungan::create([
+        $tabungan_akhir = Tabungan::create([
             'user_id' => $request->member_id,
             'credit' => $total_harga,
-            'saldo' => $harga_akhir,
+            'saldo' => $saldo_akhir,
         ]);
 
-        $keuangan_akhir = Keuangan::latest()->first('saldo');
+        $keuangan = Keuangan::latest()->first('saldo');
 
-        $total_keuangan = $keuangan_akhir->saldo + $total_harga;
+        $saldo_keuangan = $keuangan->saldo + $total_harga;
 
-        $keuangan = Keuangan::create([
+        $keuangan_akhir = Keuangan::create([
             'pj' => $pj,
-            'debit' => $total_harga,
-            'saldo' => $total_keuangan,
+            'credit' => $total_harga,
+            'saldo' => $saldo_keuangan,
         ]);
 
-        foreach ($total_belanja as $key) {
-            $update_belanja = Jumlah::where('barang_id', $key['barang_id'])->latest()->first('total');
+        foreach ($barang_belanja as $key) {
 
-            $jumlah = $update_belanja->total - $key['total'];
+            $barangUpdate = Barang::where('id', $key['barang_id'])->first('jumlah');
+
+            $kurangi = $barangUpdate->jumlah - $key['jumlah'];
 
             try {
-                $jumlah_akhir = Jumlah::create([
-                    'barang_id' => $key['barang_id'],
-                    'output' => $key['jumlah'],
-                    'total' => $jumlah,
-                ]);
 
-                $update = Penjualan::where('id', $key['id'])->where('status', 0)
-                ->update([
-                    'member_id' => $request->member_id,
+                $barang_update = Barang::where('id', $key['barang_id'])->update(['jumlah' => $kurang1]);
+                
+                $statusUpdate = Penjualan::where('id', $key['id'])->update([
                     'status' => 1,
+                    'member_id' => $request->member_id,
                 ]);
 
             } catch (\Throwable $th) {
-                return $this->sendResponse('gagal', 'data belanja gagal di update', $th->getMessage(), 500);
+                return $this->sendResponse('gagal', 'transaksi gagal diupdate', $th->getMessage(), 500);
             }
+
         }
 
-        $ids = $total_belanja->map(function($data) {
+        $ids = $barang_belanja->map(function($data){
             return $data->id;
         });
 
         $result = Penjualan::whereIn('id', $ids)->with('Barang')->get();
 
-        $data = [
+        $Total_semua = [
             'item' => $result,
+            'potongan_harga' => '10%',
             'total_harga' => $total_harga,
-            'sisa_saldo' => $harga_akhir,
+            'sisa_saldo' => saldo_akhir,
         ];
 
-        return $this->sendResponse('berhasil', 'transaksi berhasil', $data, 200);
+        return $this->sendResponse('berhasil', 'transaksi berhasil', $Total_semua, 200);
 
     }
 

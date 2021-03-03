@@ -19,7 +19,6 @@ class CreatePenjualansTable extends Migration
             $table->foreignId('pj')->constrained('users');
             $table->integer('status')->default(0);
             $table->foreignId('barang_id')->constrained('barangs');
-            $table->integer('kode_barang');
             $table->integer('jumlah');
             $table->integer('harga');
             $table->timestamps();
