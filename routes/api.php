@@ -28,6 +28,9 @@ Route::get('book', 'BookController@book');
 Route::get('bookall', 'BookController@bookAuth')->middleware('jwt.verify');
 Route::get('user', 'UserControllerAPI@getAuthenticatedUser')->middleware('jwt.verify');
 
+//mengambil semua jumlah barang
+Route::get('get-all-jumlah', 'BarangController@getJumlah');
+
 Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify', 'role:1']], function () {
     Route::resource('/', 'TabunganController');
 });
@@ -38,10 +41,12 @@ Route::group(['prefix' => 'kasir', 'middleware' => ['jwt.verify', 'role:2']], fu
     Route::patch('pay-total', 'KasirController@payTotal');
     Route::patch('pay-member', 'KasirController@payMember');
     Route::post('input-saldo-member', 'KasirController@inputSaldoMember');
+    Route::get('history-penjualan', 'KasirController@getHistory');
 });
 
 Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], function () {
-    Route::resource('/', 'JumlahControllerAPI');
+    Route::get('get-trans-penjualan', 'LeaderController@getTransPenjualan');
+    Route::get('get-trans-pembelian', 'LeaderController@getTransPembelian');
 });
 
 Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {

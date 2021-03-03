@@ -104,25 +104,23 @@ class KasirController extends Controller
         ]);
 
         foreach ($belanja as $key) {
-            $barang = Jumlah::where('barang_id', $key['barang_id'])->first('total');
+            $barang = Jumlah::where('barang_id', $key['barang_id'])->latest()->first('total');
 
             $jumlah = $barang->total - $key['jumlah'];
 
             try {
                 $jumlah = Jumlah::create([
                     'barang_id' => $key['barang_id'],
-                    'output' => $key['input'],
+                    'output' => $key['jumlah'],
                     'total' => $jumlah,
                 ]);
 
-                $update = Penjualan::where('id', $key['id'])->first();
-
-                $update->update(['status' => 1]);
+                $update = Penjualan::where('id', $key['id'])->where('status', 0)->update(['status' => 1]);
 
             } catch (\Throwable $th) {
                 return $this->sendResponse('gagal', 'data gagal diinputkan', $th->getMessage(), 500);
             }
-        }
+        }         
 
         $ids = $belanja->map(function($data) {
             return $data->id;
@@ -143,82 +141,75 @@ class KasirController extends Controller
     public function payMember(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'member_id' => 'required'
+            'member_id' => 'required',
         ]);
 
         if ($validator->fails()) {
             return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
         }
 
-         $tabungan = Tabungan::where('user_id', $request->member_id)->latest()->first('saldo');
+        $pj = Auth::user()->id;
 
-         $pj = Auth::user()->id;
+        $saldo_member = Tabungan::where('user_id', $request->member_id)->latest()->first('saldo');
 
-         $belanja = Penjualan::where('pj', $pj)->where('status', 0)->get();
-        
-         $total_harga = $belanja->sum('harga');
+        $total_belanja = Penjualan::where('pj', $pj)->where('status', 0)->get();
 
-         if ($total_harga > $tabungan->saldo) {
-             return response()->json('saldo member tidak mencukupi!!!');
-         }
+        $total_harga = $total_belanja->sum('harga');
 
-         $saldo_member = $tabungan->saldo - $total_harga;
+        if ($total_harga > $saldo_member->saldo) {
+            return response()->json('saldo anda tidak mencukupi!!!');
+        }
 
-         $credit_member = Tabungan::create([
-             'user_id' => $request->member_id,
-             'credit' => $total_harga,
-             'saldo' => $saldo_member,
-         ]);
+        $harga_akhir = $saldo_member->saldo - $total_harga;
 
-         $saldo_keuangan = Keuangan::latest()->first('saldo');
+        $saldo_baru_member = Tabungan::create([
+            'user_id' => $request->member_id,
+            'credit' => $total_harga,
+            'saldo' => $harga_akhir,
+        ]);
 
-         $saldo_akhir = $saldo_keuangan->saldo + $total_harga;
+        $keuangan_akhir = Keuangan::latest()->first('saldo');
 
-         $debit_keuangan = keuangan::create([
-             'pj' => $pj,
-             'debit' => $total_harga,
-             'saldo' => $saldo_akhir,
-         ]);
+        $total_keuangan = $keuangan_akhir->saldo + $total_harga;
 
-         foreach ($belanja as $key) {
-             $belanjaan = Jumlah::where('barang_id', $key['barang_id'])->first('total');
+        $keuangan = Keuangan::create([
+            'pj' => $pj,
+            'debit' => $total_harga,
+            'saldo' => $total_keuangan,
+        ]);
 
-             $total_barang = $belanjaan->total - $key['jumlah'];
-             try {
+        foreach ($total_belanja as $key) {
+            $update_belanja = Jumlah::where('barang_id', $key['barang_id'])->latest()->first('total');
 
-             $Total_semua_barang = Jumlah::create([
-                'barang_id' => $key['barang_id'],
-                'output' => $key['jumlah'],
-                'jumlah' => $total_barang,
-             ]);
+            $jumlah = $update_belanja->total - $key['total'];
 
-             $update = Penjualan::where('id', $key['id'])->first();
+            try {
+                $jumlah_akhir = Jumlah::create([
+                    'barang_id' => $key['barang_id'],
+                    'output' => $key['jumlah'],
+                    'total' => $jumlah,
+                ]);
 
-                 
-                 $update->update([
-                    'member_id' => $request->member_id, 
-                    'status' => 1,
-                 ]);
+                $update = Penjualan::where('id', $key['id'])->where('status', 0)->update(['status' => 1]);
 
-             } catch (\Throwable $th) {
-                return $this->sendResponse('gagal', 'data gagal diupdate', $th->getMessage(), 500);
-             }
+            } catch (\Throwable $th) {
+                return $this->sendResponse('gagal', 'data belanja gagal di update', $th->getMessage(), 500);
+            }
+        }
 
-         }
-
-         $ids = $belanja->map(function($data) {
+        $ids = $total_belanja->map(function($data) {
             return $data->id;
-         });
+        });
 
-         $result = Penjualan::whereIn('id', $ids)->with('Barang')->get();
+        $result = Penjualan::whereIn('id', $ids)->with('Barang')->get();
 
-         $data = [
+        $data = [
             'item' => $result,
-            'total' => $total_harga,
-            'uang' => $total_harga,
-         ];
+            'total_harga' => $total_harga,
+            'sisa_saldo' => $harga_akhir,
+        ];
 
-         return $this->sendResponse('berhasil', 'transaksi berhasil', $data, 200);
+        return $this->sendResponse('berhasil', 'transaksi berhasil', $data, 200);
 
     }
 
@@ -251,5 +242,14 @@ class KasirController extends Controller
             return $this->sendResponse('gagal', 'gagal menambahkan saldo member', $th->getMessage(), 500);
         }
 
+    }
+
+    public function getHistory()
+    {
+        $pj = Auth::user()->id;
+
+        $history = Penjualan::where('pj', $pj)->where('status', 1)->get();
+
+        return $this->sendResponse('berhasil', 'history penjualan dirimu berhasil ditampilkan', $history, 200);
     }
 }
