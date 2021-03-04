@@ -343,5 +343,18 @@ class StafController extends Controller
         }
     }
 
+    public function deleteStuff($id)
+    {
+        try {
+            $deleteStuff = Barang::where('id', $id)->delete();
+
+            $lain = Barang::where('id', '!=', $id)->get();
+
+            return $this->sendResponse('berhasil', 'data berhasil di hapus', $lain, 200);
+        } catch (\Throwable $th) {
+            return $this->sendResponse('gagal', 'data gagal dihapus', $th->getMessage(), 500);
+        }
+    }
+
   
 }
