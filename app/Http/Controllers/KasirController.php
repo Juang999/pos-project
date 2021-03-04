@@ -122,14 +122,14 @@ class KasirController extends Controller
 
         $result = Penjualan::whereIn('id', $ids)->with('Barang')->get();
 
-        $data = [
+        $Total = [
             'item' => $result,
             'total' => $total_harga,
             'total_uang' => $request->total_uang,
             'kembali' => $kembali,
         ];
 
-        return $this->sendResponse('berhasil', 'penjualan berhasil', $data, 200);
+        return $this->sendResponse('berhasil', 'penjualan berhasil', $Total, 200);
 
     }
 
