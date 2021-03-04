@@ -15,10 +15,10 @@ class CreatePenjualansTable extends Migration
     {
         Schema::create('penjualans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('member_id')->nullable()->constrained('users');
-            $table->foreignId('pj')->constrained('users');
+            $table->foreignId('member_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('pj')->constrained('users')->onDelete('cascade');
+            $table->foreignId('barang_id')->constrained('barangs')->onDelete('cascade');
             $table->integer('status')->default(0);
-            $table->foreignId('barang_id')->constrained('barangs');
             $table->integer('jumlah');
             $table->integer('harga');
             $table->timestamps();

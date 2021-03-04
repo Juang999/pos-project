@@ -55,6 +55,7 @@ class StafController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'kategori_id' => 'required',
+            'supplier_id' => 'required',
             'nama_barang' => 'required',
             'harga_beli' => 'required',
             'harga_jual' => 'required',
@@ -74,7 +75,9 @@ class StafController extends Controller
                 'harga_jual' => $request->harga_jual,
             ]);
 
-            return $this->sendResponse('berhasil', 'barang berhasil diinputkan', $barang, 200);
+            $result = Barang::with('Supplier')->find($barang->id);
+
+            return $this->sendResponse('berhasil', 'barang berhasil diinputkan', $result, 200);
         } catch (\Throwable $th) {
             return $this->sendResponse('gagal', 'data gagal diinputkan', $th->getMessage(), 400);
         }
@@ -258,6 +261,7 @@ class StafController extends Controller
     public function deleteSupplier($id)
     {
         try {
+                       
         $delete  = Supplier::where('id', $id)->delete();
 
         $ada = Supplier::where('id', '!=', $id)->get();
@@ -306,7 +310,38 @@ class StafController extends Controller
         }
     }
 
-    
+    public function updateStuff($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'kateogri_id' => 'required',
+            'supplier_id' => 'required',
+            'nama_barang' => 'required',
+            'harga_beli' => 'required',
+            'harga_jual' => 'required',
+            'jumlah' => 'required',
+        ]);
+
+        if ($validator->errors()) {
+            return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
+        }
+
+        try {
+            $update_barang = Barang::where('id', $id)->update([
+                'kategori_id' => $request->kategori_id,
+                'supplier_id' => $request->supplier_id,
+                'nama_barang' => $request->nama_barang,
+                'harga_beli' => $request->harga_beli,
+                'harga_jual' => $request->harga_jual,
+                'jumlah' => $request->jumlah,
+                ]);
+
+                $result = Barang::with('Supplier')->find($udate_barang->id)->first();
+
+                return $this->sendResponse('berhasil', 'data berhasil diupdate', $result, 200);
+            } catch (\Throwable $th) {
+                return $this->sendResponse('gagal', 'data gagal divalidasi', $th->getMessage, 500);
+        }
+    }
 
   
 }
