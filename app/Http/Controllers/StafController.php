@@ -227,5 +227,86 @@ class StafController extends Controller
         return $this->sendResponse('berhasil', 'riwayat pembelian berhasil ditampilkan', $riwayat, 200);
     }
 
+    public function updateSupplier($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'supplier' => 'required',
+            'alamat' => 'required',
+            'nomor_telepon' => 'required',
+        ]);
+        
+        if ($validator->fails()) {
+            return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
+        }
+
+        try {
+
+        $update_supplier = Supplier::where('id', $id)->update([
+            'supplier' => $request->supplier,
+            'alamat' => $request->alamat,
+            'nomor_telepon' => $request->nomor_telepon,
+        ]);
+
+        $supplier_baru = Supplier::where('id', $id)->first();
+
+        return $this->sendResponse('berhasil', 'data supplier berhasil diupdate', $supplier_baru, 200);
+        } catch (\Throwable $th) {
+        return $this->sendResponse('gagal', 'data supplier gagal diupdate', $th->getMessage(), 500);
+        }
+    }
+
+    public function deleteSupplier($id)
+    {
+        try {
+        $delete  = Supplier::where('id', $id)->delete();
+
+        $ada = Supplier::where('id', '!=', $id)->get();
+
+        return $this->sendResponse('berhasil', 'data supplier berhasil didelete', $ada, 200);
+        } catch (\Throwable $th) {
+        return $this->sendResponse('gagal', 'data supplier gagal diupdate', $th->getMessage(), 500);
+        }   
+    }
+
+    public function updateCategory($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'kategori' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
+        }
+
+        try 
+        {
+        $update_kategori = Kategori::where('id', $id)->update([
+            'kategori' => $request->kategori,
+        ]);
+
+        $baru_update = Kategori::where('id', $id)->first();
+
+        return $this->sendResponse('berhasil', 'kategori berhasil diupdate', $baru_update, 200);
+        } catch (\Throwable $th) {
+        return $this->sendResponse('gagal', 'ketegori gagal diupdate', $th->getMessage(), 200);
+        }
+    }
+
+    public function deleteCategory($id)
+    {
+        try {
+
+        $data_delete = Kategori::where('id', $id)->delete();
+
+        $lain = Kategori::where('id', '!=', $id)->get();
+
+            return $this->sendResponse('berhasil', 'data berhasil dihapus', $lain, 200);
+        } catch (\Throwable $th) {
+            return $this->sendResponse('gagal', 'data gagal dihapus', $th->getMessage(), 500);
+        }
+    }
+
+    
+
   
 }

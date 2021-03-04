@@ -50,15 +50,26 @@ Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], f
 });
 
 Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {
+    //supplier
     Route::post('create-supplier', 'StafController@create');
-    Route::post('create-stuff', 'StafController@createBarang');
+    Route::get('get-supplier', 'StafController@index');
+    Route::patch('update-supplier/{id}/edit', 'StafController@updateSupplier');
+    Route::delete('delete-supplier/{id}/remove', 'StafController@deleteSupplier');
+    //category
     Route::post('create-category', 'StafController@postCategory');
+    Route::get('get-category', 'StafController@getCategory');
+    Route::patch('update-category/{id}/edit', 'StafController@updateCategory');
+    Route::delete('delete-category/{id}/remove', 'StafController@deleteCategory');
+
+    //stuff
+    Route::post('create-stuff', 'StafController@createBarang');
+    Route::get('get-stuff', 'StafController@getBarang');
+    Route::patch('update-stuff/{id}/edit', 'StaffController@editStuff');
+
+    //buy Stuff
     Route::post('buy-stuff', 'StafController@buyStuff');
     Route::patch('pay-total', 'StafController@payTotal');
     Route::get('get-total', 'StafController@getTotal');
-    Route::get('get-category', 'StafController@getCategory');
-    Route::get('get-stuff', 'StafController@getBarang');
     Route::get('get-riwayat', 'StafController@getRiwayat');
-    Route::get('get-supplier', 'StafController@index');
 
 });
