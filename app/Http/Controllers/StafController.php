@@ -56,7 +56,6 @@ class StafController extends Controller
         $validator = Validator::make($request->all(), [
             'kategori_id' => 'required',
             'nama_barang' => 'required',
-            'barcode' => 'required',
             'harga_beli' => 'required',
             'harga_jual' => 'required',
         ]);
@@ -70,7 +69,7 @@ class StafController extends Controller
                 'kategori_id' => $request->kategori_id,
                 'supplier_id' => $request->supplier_id,
                 'nama_barang' => $request->nama_barang,
-                'barcode' => $request->barcode,
+                'barcode' => rand(),
                 'harga_beli' => $request->harga_beli,
                 'harga_jual' => $request->harga_jual,
             ]);
