@@ -42,7 +42,7 @@ Route::group(['prefix' => 'kasir', 'middleware' => ['jwt.verify', 'role:2']], fu
     Route::patch('pay', 'KasirController@payTotal');
     Route::patch('pay-member', 'KasirController@payMember');
     Route::post('input-saldo-member', 'KasirController@inputSaldoMember');
-    Route::get('history-penjualan', 'KasirController@getHistory');
+    Route::get('get-story', 'KasirController@getHistory');
 });
 
 Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], function () {
