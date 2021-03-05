@@ -36,9 +36,10 @@ Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify', 'role:1']], f
 });
 
 Route::group(['prefix' => 'kasir', 'middleware' => ['jwt.verify', 'role:2']], function () {
-    Route::post('store', 'KasirController@Store');
+    Route::post('sell', 'KasirController@Store');
     Route::get('get-total', 'KasirController@getTotal');
-    Route::patch('pay-total', 'KasirController@payTotal');
+    Route::delete('delete-sale/{id}/remove', 'KasirController@deleteSale');
+    Route::patch('pay', 'KasirController@payTotal');
     Route::patch('pay-member', 'KasirController@payMember');
     Route::post('input-saldo-member', 'KasirController@inputSaldoMember');
     Route::get('history-penjualan', 'KasirController@getHistory');
@@ -68,9 +69,10 @@ Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {
     Route::delete('delete-stuff/{id}/remove', 'StafController@deleteStuff');
 
     //buy Stuff
-    Route::post('buy-stuff', 'StafController@buyStuff');
+    Route::post('order', 'StafController@buyStuff');
     Route::get('get-total', 'StafController@getTotal');
-    Route::patch('pay-total', 'StafController@payTotal');
+    Route::delete('delete-order/{id}/remove', 'StafController@deleteOrder');
+    Route::patch('pay', 'StafController@payTotal');
 
     //history
     Route::get('get-riwayat', 'StafController@getRiwayat');

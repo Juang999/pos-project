@@ -251,4 +251,15 @@ class KasirController extends Controller
 
         return $this->sendResponse('berhasil', 'history penjualan dirimu berhasil ditampilkan', $history, 200);
     }
+
+    public function deleteSale($id)
+    {
+        try {
+            $deleteSale = Penjualan::where('id', $id)->delete();
+
+            return response()->json('berhasil, barang penjualan berhasil dibatalkan');
+        } catch (\Throwable $th) {
+            return $this->sendResponse('gagal', 'barang penjualan gagal di batalkan');
+        }
+    }
 }

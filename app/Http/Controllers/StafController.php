@@ -356,5 +356,16 @@ class StafController extends Controller
         }
     }
 
+    public function deleteOrder($id)
+    {
+        try {
+        $deleteOrder = Pembelian::where('id', $id)->delete();
+
+            return response()->json('berhasil, pesanan berhasil dihapus');
+        } catch (\Throwable $th) {
+            return $this->sendResponse('gagal', 'pesanan gagal dihapus', $th->getMessage(), 500);
+        }
+    }
+
   
 }
