@@ -36,12 +36,18 @@ Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify', 'role:1']], f
 });
 
 Route::group(['prefix' => 'kasir', 'middleware' => ['jwt.verify', 'role:2']], function () {
-    Route::post('sell', 'KasirController@Store');
-    Route::get('get-total', 'KasirController@getTotal');
-    Route::delete('delete-sale/{id}/remove', 'KasirController@deleteSale');
+    //Sell
+    Route::post('sale', 'KasirController@Store');
+    Route::get('sales', 'KasirController@getTotal');
+    Route::patch('sale/{id}/update', 'KasirController@udpateSale');
+    Route::delete('sale/{id}/delete', 'KasirController@deleteSale');
     Route::patch('pay', 'KasirController@payTotal');
     Route::patch('pay-member', 'KasirController@payMember');
+
+    //InputSaldo
     Route::post('input-saldo-member', 'KasirController@inputSaldoMember');
+
+    //History
     Route::get('get-story', 'KasirController@getHistory');
 });
 
@@ -51,30 +57,32 @@ Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], f
 });
 
 Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {
-    //supplier
-    Route::post('create-supplier', 'StafController@create');
-    Route::get('get-supplier', 'StafController@index');
-    Route::patch('update-supplier/{id}/edit', 'StafController@updateSupplier');
-    Route::delete('delete-supplier/{id}/remove', 'StafController@deleteSupplier');
-    //category
-    Route::post('create-category', 'StafController@postCategory');
-    Route::get('get-category', 'StafController@getCategory');
-    Route::patch('update-category/{id}/edit', 'StafController@updateCategory');
-    Route::delete('delete-category/{id}/remove', 'StafController@deleteCategory');
+    //Supplier
+    Route::post('supplier', 'StafController@create');
+    Route::get('suppliers', 'StafController@index');
+    Route::patch('supplier/{id}/update', 'StafController@updateSupplier');
+    Route::delete('supplier/{id}/delete', 'StafController@deleteSupplier');
 
-    //stuff
-    Route::post('create-stuff', 'StafController@createBarang');
-    Route::get('get-stuff', 'StafController@getBarang');
-    Route::patch('update-stuff/{id}/edit', 'StaffController@editStuff');
-    Route::delete('delete-stuff/{id}/remove', 'StafController@deleteStuff');
+    //Category
+    Route::post('category', 'StafController@postCategory');
+    Route::get('categories', 'StafController@getCategory');
+    Route::patch('category/{id}/update', 'StafController@updateCategory');
+    Route::delete('category/{id}/delete', 'StafController@deleteCategory');
 
-    //buy Stuff
+    //Stuff
+    Route::post('goods', 'StafController@createBarang');
+    Route::get('goods', 'StafController@getBarang');
+    Route::patch('goods/{id}/update', 'StaffController@editStuff');
+    Route::delete('goods/{id}/delete', 'StafController@deleteStuff');
+
+    //Buy Stuff
     Route::post('order', 'StafController@buyStuff');
-    Route::get('get-total', 'StafController@getTotal');
-    Route::delete('delete-order/{id}/remove', 'StafController@deleteOrder');
+    Route::get('orders', 'StafController@getTotal');
+    Route::patch('order/{id}/update', 'StafController@updateOrder');
+    Route::delete('order/{id}/delete', 'StafController@deleteOrder');
     Route::patch('pay', 'StafController@payTotal');
 
-    //history
-    Route::get('get-story', 'StafController@getRiwayat');
+    //History
+    Route::get('histories', 'StafController@getRiwayat');
 
 });

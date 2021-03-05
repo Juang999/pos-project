@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Validator;
 
 class KasirController extends Controller
 {
-    public function Store(Request $request)
+    public function store(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
@@ -262,6 +262,28 @@ class KasirController extends Controller
             return response()->json('berhasil, barang penjualan berhasil dibatalkan');
         } catch (\Throwable $th) {
             return $this->sendResponse('gagal', 'barang penjualan gagal di batalkan');
+        }
+    }
+
+    public function updateSale($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'jumlah' => 'required' 
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
+        }
+
+        try {
+            $updateSale = Penjualan::where('id', $id)->update([
+                'jumlah' => $request->jumlah,
+            ]);
+
+            $result = Penjualan::where('id', $id)->first();
+            return $this->sendResponse('berhasil', 'barang berhasil diupdate', $result, 200);
+        } catch (\Throwable $th) {
+            return $this->sendResponse('gagal', 'data gagal diupdate', $th->getMessage(), 500);
         }
     }
 }

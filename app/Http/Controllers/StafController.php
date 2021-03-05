@@ -367,5 +367,27 @@ class StafController extends Controller
         }
     }
 
+    public function updateOrder($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'jumlah' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
+        }
+
+        try {
+            $updateOrder = Pembelian::where('id', $id)->update([
+                'jumlah' => $request->jumlah,
+            ]);
+
+            $result = Pembelian::where('id', $id)->first();
+            return $this->sendResponse('berhasil', 'pesanan berhasil diupdate', $result, 200);
+        } catch (\Throwable $th) {
+            return $this->sendResponse('gagal', 'pesanan gagal divalidasi', $th->getMessage(), 500);
+        }
+    }
+
   
 }
