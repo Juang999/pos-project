@@ -137,7 +137,7 @@ class KasirController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'member_id' => 'required',
+            'kode_member' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -149,8 +149,10 @@ class KasirController extends Controller
         $barang_belanja = Penjualan::where('pj', $pj)->where('status', 0)->get();
 
         $total_harga = $barang_belanja->sum('harga');
+
+        $member_id = User::where('kode_member', $request->kode_member)->first();
         
-        $saldo_member = Tabungan::where('user_id', $request->member_id)->latest()->first('saldo');
+        $saldo_member = Tabungan::where('user_id', $member_id)->latest()->first('saldo');
 
         if ($total_harga > $saldo_member->saldo) {
             return response()->json('saldo anda tidak mencukupi');
