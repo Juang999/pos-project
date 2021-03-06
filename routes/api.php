@@ -52,6 +52,7 @@ Route::group(['prefix' => 'kasir', 'middleware' => ['jwt.verify', 'role:2']], fu
 });
 
 Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], function () {
+    //Histories
     Route::get('get-trans-penjualan', 'LeaderController@getTransPenjualan');
     Route::get('get-trans-pembelian', 'LeaderController@getTransPembelian');
 });

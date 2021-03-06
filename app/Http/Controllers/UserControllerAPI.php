@@ -45,13 +45,15 @@ class UserControllerAPI extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        // dd($kode);
+        $code = explode("8", $request->nomor_telepon, 2);
+
+        $member_code = implode("000", $code);
 
         $user = User::create([
             'name' => $request->get('name'),
             'nomor_telepon' => $request->get('nomor_telepon'),
             'email' => $request->get('email'),
-            'kode_member' => rand(),
+            'kode_member' => $member_code,
             'password' => Hash::make($request->get('password')),
         ]);
 
