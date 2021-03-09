@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Jumlah;
 use App\Barang;
+use App\Absensi;
 use App\Kategori;
 use App\Supplier;
 use App\Keuangan;
@@ -151,7 +152,7 @@ class KasirController extends Controller
         $total_harga = $barang_belanja->sum('harga');
 
         $member_id = User::where('kode_member', $request->kode_member)->first();
-        
+
         $saldo_member = Tabungan::where('user_id', $member_id->id)->latest()->first('saldo');
 
         if ($total_harga > $saldo_member->saldo) {
@@ -185,7 +186,7 @@ class KasirController extends Controller
             try {
 
                 $barang_update = Barang::where('id', $key['barang_id'])->update(['jumlah' => $kurang1]);
-                
+
                 $statusUpdate = Penjualan::where('id', $key['id'])->update([
                     'status' => 1,
                     'member_id' => $request->member_id,
@@ -207,7 +208,7 @@ class KasirController extends Controller
             'item' => $result,
             'potongan_harga' => '10%',
             'total_harga' => $total_harga,
-            'sisa_saldo' => saldo_akhir,
+            'sisa_saldo' => $saldo_akhir,
         ];
 
         return $this->sendResponse('berhasil', 'transaksi berhasil', $Total_semua, 200);
@@ -268,7 +269,7 @@ class KasirController extends Controller
     public function updateSale($id, Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'jumlah' => 'required' 
+            'jumlah' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -284,6 +285,37 @@ class KasirController extends Controller
             return $this->sendResponse('berhasil', 'barang berhasil diupdate', $result, 200);
         } catch (\Throwable $th) {
             return $this->sendResponse('gagal', 'data gagal diupdate', $th->getMessage(), 500);
+        }
+    }
+
+    public function absent()
+    {
+        $kasir_id = Auth::user()->id;
+
+        $date = date('Y-m-d');
+
+        $lastAbsent = Absensi::where('kasir_id', $kasir_id)->whereDate('created_at', $date)->latest()->first();
+
+        if ($lastAbsent->status == 1) {
+            return response()->json('anda telah mengisi daftar hadir hari ini!!');
+        }
+
+        $total_kehadiran1 = Absensi::where('kasir_id', $kasir_id)->latest()->first('total_kehadiran');
+
+        $total_kehadiran = $total_kehadiran1->total_kehadiran + 1;
+
+        try {
+            $absent = Absensi::create([
+                 'kasir_id' => $kasir_id,
+                 'status' => 1,
+                 'total_kehadiran' => $total_kehadiran,
+            ]);
+
+            $absent1 = Absensi::with('User')->find($absent->id);
+
+            return $this->sendResponse('berhasil', 'anda berhasil mengisi daftar hadir', $absent1, 200);
+        } catch (\Throwable $th) {
+            return $this->sendResponse('gagal', 'gagal mengisi daftar hadir', $th->getMessage(), 500);
         }
     }
 }

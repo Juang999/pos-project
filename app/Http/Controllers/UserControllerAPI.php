@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Absensi;
 use App\Tabungan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -95,4 +96,5 @@ class UserControllerAPI extends Controller
 
         return response()->json(compact('user'));
     }
+
 }

@@ -49,12 +49,18 @@ Route::group(['prefix' => 'kasir', 'middleware' => ['jwt.verify', 'role:2']], fu
 
     //History
     Route::get('get-story', 'KasirController@getHistory');
+
+    //Absensi
+    Route::post('absent', 'KasirController@absent');
 });
 
 Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], function () {
     //Histories
     Route::get('get-trans-penjualan', 'LeaderController@getTransPenjualan');
     Route::get('get-trans-pembelian', 'LeaderController@getTransPembelian');
+
+    //tambahKaryawan
+    Route::post('officer', 'LeaderController@registerKaryawan');
 });
 
 Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {
