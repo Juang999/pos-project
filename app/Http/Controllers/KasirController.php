@@ -281,7 +281,7 @@ class KasirController extends Controller
         }
 
         try {
-            $updateSale = Penjualan::where('id', $id)->update([
+            $updateSale = Penjualan::where('id', $id)->where('status', NULL)->update([
                 'jumlah' => $request->jumlah,
             ]);
 
