@@ -281,11 +281,13 @@ class KasirController extends Controller
         }
 
         try {
-            $updateSale = Penjualan::where('id', $id)->where('status', NULL)->update([
+
+            $updateSale = Penjualan::where('id', $id)->update([
                 'jumlah' => $request->jumlah,
             ]);
 
-            $result = Penjualan::where('id', $id)->first();
+            $result = Penjualan::where('id', $id)->with('Barang')->first();
+
             return $this->sendResponse('berhasil', 'barang berhasil diupdate', $result, 200);
         } catch (\Throwable $th) {
             return $this->sendResponse('gagal', 'data gagal diupdate', $th->getMessage(), 500);
