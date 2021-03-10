@@ -280,10 +280,17 @@ class KasirController extends Controller
             return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
         }
 
+        $barang_id = Penjualan::where('id', $id)->first('barang_id');
+
+        $barang = Barang::where('id', $barang_id->barang_id)->first('harga_jual');
+
+        $harga = $barang->harga_jual * $request->jumlah;
+
         try {
 
             $updateSale = Penjualan::where('id', $id)->update([
                 'jumlah' => $request->jumlah,
+                'harga' => $harga,
             ]);
 
             $result = Penjualan::where('id', $id)->with('Barang')->first();
