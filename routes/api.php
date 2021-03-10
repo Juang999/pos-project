@@ -31,6 +31,8 @@ Route::get('user', 'UserControllerAPI@getAuthenticatedUser')->middleware('jwt.ve
 //mengambil semua jumlah barang
 Route::get('get-all-jumlah', 'BarangController@getJumlah');
 
+Route::post('password/email', 'UserControllerAPI@resetPassword');
+
 Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify', 'role:1']], function () {
     Route::resource('/', 'TabunganController');
 });

@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Absensi;
 use App\Tabungan;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 
 class UserControllerAPI extends Controller
 {
@@ -97,4 +99,23 @@ class UserControllerAPI extends Controller
         return response()->json(compact('user'));
     }
 
+
+    public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendResponse('gagal', 'gagal divalidasi', $validator->errors(), 500);
+        }
+
+        try {
+            Password::sendResetLink(['email' => $request->email]);
+
+            return response()->json('berhasil, reset password berhasil dikirim ke email mu');
+        } catch (\Throwable $th) {
+            return $this->sendResponse('gagal', 'reset password gagal dikirim', $th->getMessage(), 500);
+        }
+    }
 }
