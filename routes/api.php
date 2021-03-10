@@ -37,7 +37,7 @@ Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify', 'role:1']], f
 
 Route::group(['prefix' => 'kasir', 'middleware' => ['jwt.verify', 'role:2']], function () {
     //Sell
-    Route::post('sale', 'KasirController@Store');
+    Route::post('sale', 'KasirController@store');
     Route::get('sales', 'KasirController@getTotal');
     Route::patch('sale/{id}/update', 'KasirController@udpateSale');
     Route::delete('sale/{id}/delete', 'KasirController@deleteSale');

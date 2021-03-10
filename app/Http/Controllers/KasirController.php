@@ -37,6 +37,10 @@ class KasirController extends Controller
 
         $id_barang = Barang::where('barcode', $request->barcode)->first();
 
+        if (!$id_barang) {
+            return response()->json('barang tidak ditemukan');
+        }
+
         $harga = $id_barang->harga_jual * $request->jumlah;
 
         try {
@@ -162,7 +166,7 @@ class KasirController extends Controller
         $saldo_akhir = $saldo_member->saldo - $total_harga;
 
         $tabungan_akhir = Tabungan::create([
-            'user_id' => $request->member_id,
+            'user_id' => $member_id->id,
             'credit' => $total_harga,
             'saldo' => $saldo_akhir,
         ]);
@@ -181,7 +185,7 @@ class KasirController extends Controller
 
             $barangUpdate = Barang::where('id', $key['barang_id'])->first('jumlah');
 
-            $kurangi = $barangUpdate->jumlah - $key['jumlah'];
+            $kurang1 = $barangUpdate->jumlah - $key['jumlah'];
 
             try {
 
