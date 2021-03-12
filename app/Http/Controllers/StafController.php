@@ -202,7 +202,7 @@ class StafController extends Controller
                 $update->update(['status' => 1]);
 
             } catch (\Throwable $th) {
-                return $this->sendResponse('gagal', 'transakasi gagal', th->getMessage(), 500);
+                return $this->sendResponse('gagal', 'transakasi gagal', $th->getMessage(), 500);
             }
         }
 
@@ -335,7 +335,7 @@ class StafController extends Controller
                 'jumlah' => $request->jumlah,
                 ]);
 
-                $result = Barang::with('Supplier')->find($udate_barang->id)->first();
+                $result = Barang::with('Supplier')->find($update_barang->id)->first();
 
                 return $this->sendResponse('berhasil', 'data berhasil diupdate', $result, 200);
             } catch (\Throwable $th) {
