@@ -147,7 +147,7 @@ class StafController extends Controller
 
     public function getBarang()
     {
-        $barang = Barang::select('id', 'nama_barang', 'barcode')->get();
+        $barang = Barang::with('Kategori')->get();
 
         return $this->sendResponse('berhasil', 'data barang berhasil ditampilkan', $barang, 200);
     }
@@ -193,14 +193,14 @@ class StafController extends Controller
 
             $total_jumlah = $barangUpdate->jumlah + $key['jumlah'];
 
-            
+
             try {
                 $update_barang = Barang::where('id', $key['barang_id'])->update(['jumlah' => $total_jumlah]);
-                
+
                 $update = Pembelian::where('id', $key['id'])->first();
-                
+
                 $update->update(['status' => 1]);
-                
+
             } catch (\Throwable $th) {
                 return $this->sendResponse('gagal', 'transakasi gagal', th->getMessage(), 500);
             }
@@ -237,7 +237,7 @@ class StafController extends Controller
             'alamat' => 'required',
             'nomor_telepon' => 'required',
         ]);
-        
+
         if ($validator->fails()) {
             return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
         }
@@ -261,7 +261,7 @@ class StafController extends Controller
     public function deleteSupplier($id)
     {
         try {
-                       
+
         $delete  = Supplier::where('id', $id)->delete();
 
         $ada = Supplier::where('id', '!=', $id)->get();
@@ -269,7 +269,7 @@ class StafController extends Controller
         return $this->sendResponse('berhasil', 'data supplier berhasil didelete', $ada, 200);
         } catch (\Throwable $th) {
         return $this->sendResponse('gagal', 'data supplier gagal diupdate', $th->getMessage(), 500);
-        }   
+        }
     }
 
     public function updateCategory($id, Request $request)
@@ -282,7 +282,7 @@ class StafController extends Controller
             return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
         }
 
-        try 
+        try
         {
         $update_kategori = Kategori::where('id', $id)->update([
             'kategori' => $request->kategori,
@@ -389,5 +389,5 @@ class StafController extends Controller
         }
     }
 
-  
+
 }
