@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('login');
+    return view('auth.login');
 });
 
 Route::get('/user', 'WebController1@read');

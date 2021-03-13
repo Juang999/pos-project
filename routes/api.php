@@ -82,7 +82,7 @@ Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {
     //Stuff
     Route::post('goods', 'StafController@createBarang');
     Route::get('goods', 'StafController@getBarang');
-    Route::patch('goods/{id}/update', 'StaffController@editStuff');
+    Route::patch('goods/{id}/update', 'StafController@editStuff');
     Route::delete('goods/{id}/delete', 'StafController@deleteStuff');
 
     //Buy Stuff
