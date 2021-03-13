@@ -377,9 +377,16 @@ class StafController extends Controller
             return $this->sendResponse('gagal', 'data gagal divalidasi', $validator->errors(), 500);
         }
 
+        $updateHarga = Pembelian::where('id', $id)->first('barang_id');
+
+        $harga1 = Barang::where('id', $updateHarga->barang_id)->first('harga_beli');
+
+        $harga = $harga1->harga_beli * $request->jumlah;
+
         try {
             $updateOrder = Pembelian::where('id', $id)->update([
                 'jumlah' => $request->jumlah,
+                'harga' => $harga,
             ]);
 
             $result = Pembelian::where('id', $id)->first();
