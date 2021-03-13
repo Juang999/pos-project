@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Absensi;
 use App\Barang;
 use App\Jumlah;
+use App\Keuangan;
 use App\Penjualan;
 use App\Pembelian;
 use App\User;
@@ -62,5 +63,24 @@ class LeaderController extends Controller
         } catch (\Throwable $th) {
                 return $this->sendResponse('gagal', 'gagal didaftarkan', $th->getMessage(), 500);
         }
+    }
+
+    public function profit()
+    {
+        $profit = Keuangan::select('debit', 'credit')->get();
+
+        $debit = $profit->sum('debit');
+
+        $credit = $profit->sum('credit');
+
+        $profit = $credit - $debit;
+
+        $result = [
+            'debit' => $debit,
+            'credit' => $credit,
+            'saldo' => $profit,
+        ];
+
+        return $this->sendResponse('berhasil', 'mengambil laporan laba', $result, 200);
     }
 }

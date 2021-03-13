@@ -60,6 +60,7 @@ Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], f
     //Histories
     Route::get('get-trans-penjualan', 'LeaderController@getTransPenjualan');
     Route::get('get-trans-pembelian', 'LeaderController@getTransPembelian');
+    Route::get('get-profit', 'LeaderController@profit');
 
     //tambahKaryawan
     Route::post('officer', 'LeaderController@registerKaryawan');
