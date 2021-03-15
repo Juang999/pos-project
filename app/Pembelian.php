@@ -8,12 +8,12 @@ class Pembelian extends Model
 {
     public function User()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'pj');
     }
 
     public function Barang()
     {
-        return $this->hasMany('App\Barang', 'id', 'barang_id');
+        return $this->belongsTo('App\Barang', 'barang_id', 'id');
     }
 
     public function DetailPenjualan()

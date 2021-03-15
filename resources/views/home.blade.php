@@ -1,23 +1,53 @@
-@extends('layouts.app')
+@extends('layouts.dashboard')
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+@if (Auth::user()->role == 5)
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+    @section('dashboard', 'Super Admin')
 
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
+    @section('sidebar')
+
+    <li class="nav-item">
+        <a href="/super-admin/staf" class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Staf</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/super-admin/officer" class="nav-link">
+          <i class="far fa-circle nav-icon"></i>
+          <p>Officer</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="#" class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Leader</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="#" class="nav-link">
+            <i class="far fa-circle nav-icon"></i>
+            <p>Cashier</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="#" class="nav-link">
+          <i class="far fa-circle nav-icon"></i>
+          <p>Attendance</p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="#" class="nav-link">
+          <i class="far fa-circle nav-icon"></i>
+          <p>Officer Registration</p>
+        </a>
+    </li>
+
+    @endsection
+
+@endif

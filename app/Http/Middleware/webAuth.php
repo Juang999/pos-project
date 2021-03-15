@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class webAuth
 {
@@ -13,9 +14,9 @@ class webAuth
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, ...$role)
+    public function handle($request, Closure $next)
     {
-        if (in_array($request->user()->role, $role)) {
+        if (Auth::check() && Auth::user()->role > 1) {
             return $next($request);
         }
 
