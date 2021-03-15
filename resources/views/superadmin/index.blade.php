@@ -90,7 +90,7 @@
                 </form>
             </td>
             <td>
-                <button class="btn btn-primary editBarang" data-value="{{ $barang }}" data-toggle="modal" data-target="#editModal">Edit</button>
+                <a href="/super-admin/edit/{{ $barang->id }}" class="btn btn-primary">Edit</a>
             </td>
           </tr>
         @endforeach
@@ -171,77 +171,6 @@
 <!-- /.card-body -->
 </div>
 {{-- endModal --}}
-
-<!-- editModal -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Edit Barang</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form action="/super-admin/store" method="POST" id="form-edit">
-        <div class="modal-body">
-                <div class="form-group">
-                  <label>Nama Barang</label>
-                  <input type="text" class="form-control @error('nama_barang') is-invalid @enderror" name="nama_barang" placeholder="Nama Barang">
-                   @error('nama_barang')
-                   <div class="invalid-feedback">{{ $message }}</div>
-                   @enderror
-                </div>
-                <div class="form-group">
-                  <label>Supplier</label>
-                  <select class="form-control custom-select @error('supplier_id') is-invalid @enderror" name="supplier_id">
-                    <option value="">pilih Supplier</option>
-                    @foreach ($supplier as $item)
-                        <option value="{{ $item->id }}">{{ $item->supplier }}</option>
-                    @endforeach
-                </select>
-                  @error('supplier_id')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                  @enderror
-                </div>
-                <div class="form-group">
-                    <label>Kategori</label>
-                    <select class="form-control custom-select @error('kategori_id') is-invalid @enderror" name="kategori_id">
-                        <option value="">pilih kategori</option>
-                        @foreach ($kategori as $item)
-                            <option value="{{ $item->id }}">{{ $item->kategori }}</option>
-                        @endforeach
-                    </select>
-                  @error('kategori_id')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                  @enderror
-                </div>
-                <div class="form-group">
-                    <label>harga Beli</label>
-                    <input type="text" class="form-control @error('harga_beli') is-invalid @enderror" name="harga_beli" placeholder="1.500">
-                  @error('harga_beli')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                  @enderror
-                </div>
-                <div class="form-group">
-                    <label>Harga Jual</label>
-                    <input type="text" class="form-control @error('harga_jual') is-invalid @enderror" name="harga_jual" placeholder="2.000">
-                  @error('harga_jual')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                  @enderror
-                </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Update data</button>
-            </div>
-            @csrf
-            @method('patch')
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- /.card-body -->
-</div>
 
 
 <div class="card-body" style="margin-bottom: 50px">

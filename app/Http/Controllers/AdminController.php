@@ -71,4 +71,17 @@ class AdminController extends Controller
             return back()->with('status', 'barang gagal dihapus');
         }
     }
+
+    public function showData($id)
+    {
+        $barang = Barang::where('id', $id)->first();
+
+        // dd($barang->nama_barang);
+
+        $supplier = Supplier::all();
+
+        $kategori = Kategori::all();
+
+        return view('superadmin.edit', compact('barang', 'supplier', 'kategori'));
+    }
 }

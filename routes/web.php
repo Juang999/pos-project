@@ -35,7 +35,7 @@ Route::group(['prefix' => 'super-admin', 'middleware' => ['role:5']], function (
         //storeBarang
         Route::post('/store', 'AdminController@createData');
         //editBarang
-        Route::patch('/store/edit/{id}', 'AdminController@editData');
+        Route::get('/edit/{id}', 'AdminController@showData');
 
     Route::get('officer', function () {
         return view('superadmin.officer');
