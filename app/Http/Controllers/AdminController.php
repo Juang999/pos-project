@@ -6,12 +6,14 @@ use App\Barang;
 use App\Supplier;
 use App\Kategori;
 use App\Pembelian;
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
-    public function stafRead()
+    public function getStaf()
     {
         $barang = Barang::with('Supplier', 'Kategori')->get();
 
@@ -76,12 +78,198 @@ class AdminController extends Controller
     {
         $barang = Barang::where('id', $id)->first();
 
-        // dd($barang->nama_barang);
-
         $supplier = Supplier::all();
 
         $kategori = Kategori::all();
 
         return view('superadmin.edit', compact('barang', 'supplier', 'kategori'));
+    }
+
+    public function editData(Request $request, $id)
+    {
+        // dd($request);
+        $request->validate([
+            'nama_barang' => 'required',
+            'supplier_id'  => 'required',
+            'kategori_id' => 'required',
+            'jumlah' => 'required',
+            'harga_beli' => 'required',
+            'harga_jual' => 'required',
+        ]);
+
+        try {
+            Barang::where('id', $id)->update([
+                'nama_barang' => $request->nama_barang,
+                'supplier_id' => $request->supplier_id,
+                'kategori_id' => $request->kategori_id,
+                'jumlah' => $request->jumlah,
+                'harga_beli' => $request->harga_beli,
+                'harga_jual' => $request->harga_jual,
+            ]);
+
+            return redirect('/super-admin/staf/')->with('status', 'Barang berhasil diupdate');
+        } catch (\Throwable $th) {
+            return redirect('/super-admin/staf/')->with('status', $th->getMessage());
+        }
+    }
+
+    public function createSupplier()
+    {
+        return view('superadmin.createSupplier');
+    }
+
+    public function storeSupplier(Request $request)
+    {
+        $request->validate([
+            'supplier' => 'required',
+            'alamat' => 'required',
+            'nomor_telepon' => 'required'
+        ]);
+
+        try {
+            Supplier::create([
+                'supplier' => $request->supplier,
+                'alamat' => $request->alamat,
+                'nomor_telepon' => $request->nomor_telepon
+            ]);
+
+            return redirect('/super-admin/staf/')->with('status', 'Supplier Berhasil ditambahkan');
+        } catch (\Throwable $th) {
+            return redirect('/super-admin/staf/')->with('status', $th->getMessage());
+        }
+    }
+
+    public function deleteSupplier($id)
+    {
+        try {
+        Supplier::where('id', $id)->delete();
+
+            return redirect('/super-admin/staf/')->with('status', 'supplier berhasil dihapus');
+        } catch (\Throwable $th) {
+            return redirect('/super-admin/staf')->with('status', $th->getMessage());
+        }
+    }
+
+    public function showSupplier($id)
+    {
+        $supplier = Supplier::where('id', $id)->first();
+
+        return view('superadmin.showSupplier', compact('supplier'));
+    }
+
+    public function editSupplier(Request $request, $id)
+    {
+        $request->validate([
+            'supplier' => 'required',
+            'alamat' => 'required',
+            'nomor_telepon' => 'required',
+        ]);
+
+        try {
+
+            Supplier::where('id', $id)->update([
+                'supplier' => $request->supplier,
+                'alamat' => $request->alamat,
+                'nomor_telepon' => $request->nomor_telepon,
+            ]);
+
+            return redirect('/super-admin/staf/')->with('status', 'supplier berhasil diupdate');
+        } catch (\Throwable $th) {
+            return redirect('/super-admin/staf/')->with('status', $th->getMessage());
+        }
+    }
+
+    public function createkategori()
+    {
+        return view('superadmin.createKategori');
+    }
+
+    public function storeKategori(Request $request)
+    {
+        $request->validate([
+            'kategori' => 'required'
+        ]);
+
+        try {
+            Kategori::create([
+                'kategori' => $request->kategori,
+            ]);
+
+            return redirect('/super-admin/staf/')->with('status', 'Kategori berhasil ditambahkan');
+        } catch (\Throwable $th) {
+            return redirect('super-admin/staf/')->with('status', $th->getMessage());
+        }
+    }
+
+    public function deleteKategori($id)
+    {
+        try {
+            Kategori::where('id', $id)->delete();
+
+            return redirect('/super-admin/staf/')->with('status', 'Kategori berhasil dihapus');
+        } catch (\Throwable $th) {
+            return redirect('/super-admin/staf/')->with('status', $th->getMessage());
+        }
+    }
+
+    public function showKategori($id)
+    {
+        $kategori = Kategori::where('id', $id)->first();
+
+        return view('superadmin.showKategori', compact('kategori'));
+    }
+
+    public function editKategori(Request $request, $id)
+    {
+        $request->validate([
+            'kategori' => 'required'
+        ]);
+
+        try {
+            Kategori::where('id', $id)->update([
+                'kategori' => $request->kategori
+            ]);
+
+            return redirect('/super-admin/staf/')->with('status', 'kategori berhasil diupdate');
+        } catch (\Throwable $th) {
+            return redirect('/super-admin/staf/')->with('status', $th->getMessage());
+        }
+    }
+
+    public function getOfficer()
+    {
+        $my_id = Auth::user()->id;
+
+        $officer = User::where('role', '!=', 5)->get();
+
+        return view('superadmin.officer', compact('officer'));
+    }
+
+    public function createOfficer()
+    {
+        return view('superadmin.createOfficer');
+    }
+
+    public function storeOfficer(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'nomor_telepon' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+            'password_confirmation' => 'required'
+        ]);
+
+        if ($request->password != $request->password_confirmation) {
+            return back()->with('status', 'konfirmasi password salah');
+        }
+
+        try {
+            User::create([
+                
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }

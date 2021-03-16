@@ -26,23 +26,34 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 //Super Admin
-Route::group(['prefix' => 'super-admin', 'middleware' => ['role:5']], function () {
+Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:5']], function () {
 
-    //Staf
-    Route::get('staf', 'AdminController@stafRead');
-        //deleteBarang
-        Route::delete('staf/delete/{id}', 'AdminController@stafDelete');
-        //storeBarang
-        Route::post('/store', 'AdminController@createData');
-        //editBarang
-        Route::get('/edit/{id}', 'AdminController@showData');
+    //--=[STAF]=--
+    Route::get('staf', 'AdminController@getStaf');
 
-    Route::get('officer', function () {
-        return view('superadmin.officer');
-    });
+    //crudBarang
+    Route::delete('staf/delete/{id}', 'AdminController@stafDelete');
+    Route::post('/store', 'AdminController@createData');
+    Route::get('/show/{id}', 'AdminController@showData');
+    Route::patch('/edit/{id}', 'AdminController@editData');
 
-    Route::get('leader', function () {
-        return view('superadmin.leader');
-    });
+    //crudSupplier
+    Route::get('/createSupplier', 'AdminController@createSupplier');
+    Route::post('/storeSupplier', 'AdminController@storeSupplier');
+    Route::delete('deleteSupplier/{id}', 'AdminController@deleteSupplier');
+    Route::get('/showSupplier/{id}', 'AdminController@showSupplier');
+    Route::patch('/editSupplier/{id}', 'AdminController@editSupplier');
 
+    //crudKategori
+    Route::get('/createKategori', 'AdminController@createKategori');
+    Route::post('/storeKategori', 'AdminController@storeKategori');
+    Route::delete('/deleteKategori/{id}', 'AdminController@deleteKategori');
+    Route::get('/showKategori/{id}', 'AdminController@showKategori');
+    Route::patch('/editKategori/{id}', 'AdminController@editKategori');
+
+    //--=[OFFICER]=--
+    Route::get('officer', 'AdminController@getOfficer');
+    //crudOfficer
+    Route::get('createOfficer', 'AdminController@createOfficer');
+    Route::post('storeOfficer', 'AdminController@storeOfficer');
 });

@@ -49,10 +49,39 @@
 @section('content')
 
 @if (session('status'))
-    <div class="alert alert-success">
-        {{ session('status') }}
-    </div>
+<div class="alert alert-success">
+    {{ session('status') }}
+</div>
 @endif
+
+<div class="card-body">
+    <h3 style="margin-left: 20px">Riwayat Pembelian</h3>
+    <table id="example2" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Penanggung Jawab</th>
+                <th>Barang</th>
+                <th>Jumlah</th>
+                <th>Harga</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($riwayat as $riwayat)
+
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $riwayat->user ->name }}</td>
+                <td>{{ $riwayat->barang->nama_barang }}</td>
+                <td>{{ $riwayat->jumlah }}</td>
+                <td>{{ $riwayat->harga }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+<!-- /.card-body -->
+</div>
 
 <div class="card-body" style="margin-bottom: 50px">
     <h3 style="margin-left: 20px">Barang</h3>
@@ -90,7 +119,7 @@
                 </form>
             </td>
             <td>
-                <a href="/super-admin/edit/{{ $barang->id }}" class="btn btn-primary">Edit</a>
+                <a href="/super-admin/show/{{ $barang->id }}" class="btn btn-primary">Edit</a>
             </td>
           </tr>
         @endforeach
@@ -194,20 +223,20 @@
                   <td>{{ $supplier->alamat }}</td>
                   <td>{{ $supplier->nomor_telepon }}</td>
                   <td>
-                      <form action="#" method="post">
+                      <form action="/super-admin/deleteSupplier/{{ $supplier->id }}" method="post">
                           <button class="btn btn-danger">Delete</button>
                           @method('delete')
                           @csrf
                       </form>
                   </td>
                   <td>
-                        <button class="btn btn-primary">Edit</button>
+                        <a href="/super-admin/showSupplier/{{ $supplier->id }}" class="btn btn-primary">Edit</a>
                   </td>
                 </tr>
         @endforeach
       </tbody>
     </table>
-<a href="#" class="btn btn-success" style="margin-top: 10px">Tambah Supplier</a>
+<a href="/super-admin/createSupplier" class="btn btn-success" style="margin-top: 10px">Tambah Supplier</a>
   </div>
   <!-- /.card-body -->
 </div>
@@ -229,55 +258,22 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $kategori->kategori }}</td>
                 <td>
-                    <form action="#" method="post">
+                    <form action="/super-admin/deleteKategori/{{ $kategori->id }}" method="post">
                         <button class="btn btn-danger">Hapus</button>
                         @method('delete')
                         @csrf
                     </form>
                 </td>
                 <td>
-                    <form action="#" method="post">
-                        <button class="btn btn-primary">Edit</button>
-                        @method('patch')
-                        @csrf
-                    </form>
+                    <a href="/super-admin/showKategori/{{ $kategori->id }}" class="btn btn-primary">Edit</a>
                 </td>
                 </tr>
           @endforeach
       </tbody>
     </table>
-<a href="#" class="btn btn-success" style="margin-top: 10px">Tambah Kategori</a>
+<a href="/super-admin/createKategori" class="btn btn-success" style="margin-top: 10px">Tambah Kategori</a>
   </div>
   <!-- /.card-body -->
 </div>
 
-<div class="card-body">
-    <h3 style="margin-left: 20px">Riwayat Pembelian</h3>
-    <table id="example2" class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>Penanggung Jawab</th>
-                <th>Barang</th>
-                <th>Jumlah</th>
-                <th>Harga</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($riwayat as $riwayat)
-
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $riwayat->user ->name }}</td>
-                <td>{{ $riwayat->barang->nama_barang }}</td>
-                <td>{{ $riwayat->jumlah }}</td>
-                <td>{{ $riwayat->harga }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-    <a href="#" class="btn btn-success" style="margin-top: 10px">Beli Barang</a>
-</div>
-<!-- /.card-body -->
-</div>
 @endsection

@@ -50,6 +50,7 @@
 
 <div class="card-body" style="margin-bottom: 50px">
     <h3 style="margin-left: 20px">Pemimpin</h3>
+    <a href="/super-admin/createOfficer" class="btn btn-success" style="margin-bottom: 13px">Daftarkan</a>
     <table id="example2" class="table table-bordered table-hover">
       <thead>
       <tr>
@@ -63,79 +64,30 @@
       </tr>
       </thead>
       <tbody>
+        @foreach ($officer as $officer)
       <tr>
-        <td>1</td>
-        <td>Bangkit Juang Raharjo</td>
-        <td>081325507780</td>
-        <td>juangraharjo03@gmail.com</td>
-        <td>Pemimpin</td>
-        <td><a href="#" class="btn btn-danger">Hapus</a></td>
-        <td><a href="#" class="btn btn-primary">Edit</a></td>
-      </tr>
+          <td>{{ $loop->iteration }}</td>
+          <td>{{ $officer->name }}</td>
+          <td>{{ $officer->nomor_telepon }}</td>
+          <td>{{ $officer->email }}</td>
+          <td>
+              @if ($officer->role == 1)
+                    member
+              @elseif ($officer->role == 2)
+                    kasir
+              @elseif ($officer->role == 3)
+                    staff
+              @elseif ($officer->role == 4)
+                    leader
+              @endif
+          </td>
+          <td><a href="#" class="btn btn-danger">Hapus</a></td>
+          <td><a href="#" class="btn btn-primary">Edit</a></td>
+        </tr>
+        @endforeach
       </tbody>
     </table>
-  </div>
-  <!-- /.card-body -->
 </div>
-
-
-<div class="card-body" style="margin-bottom: 50px">
-    <h3 style="margin-left: 20px">Staf</h3>
-    <table id="example2" class="table table-bordered table-hover">
-      <thead>
-      <tr>
-        <th>No.</th>
-        <th>Nama Lengkap</th>
-        <th>Nomor Telepon</th>
-        <th>Email</th>
-        <th>role</th>
-        <th>Hapus</th>
-        <th>Edit</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>1</td>
-        <td>My Hero Salvador</td>
-        <td>081325507780</td>
-        <td>MyHeroSalvador@gmail.com</td>
-        <td>Staf</td>
-        <td><a href="#" class="btn btn-danger">Hapus</a></td>
-        <td><a href="#" class="btn btn-primary">Edit</a></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
   <!-- /.card-body -->
-</div>
 
-<div class="card-body" style="margin-bottom: 50px">
-    <h3 style="margin-left: 20px">Kategori</h3>
-    <table id="example2" class="table table-bordered table-hover">
-        <thead>
-            <tr>
-              <th>No.</th>
-              <th>Nama Lengkap</th>
-              <th>Nomor Telepon</th>
-              <th>Email</th>
-              <th>role</th>
-              <th>Hapus</th>
-              <th>Edit</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td>1</td>
-              <td>Moscow666</td>
-              <td>081325507780</td>
-              <td>Moscow666@gmail.com</td>
-              <td>Kasir</td>
-              <td><a href="#" class="btn btn-danger">Hapus</a></td>
-              <td><a href="#" class="btn btn-primary">Edit</a></td>
-            </tr>
-            </tbody>
-    </table>
-  </div>
-  <!-- /.card-body -->
-</div>
 @endsection
