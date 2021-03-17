@@ -68,4 +68,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Absensi');
     }
 
+    public function Output()
+    {
+        return $this->hasMany('App\Output');
+    }
+
 }

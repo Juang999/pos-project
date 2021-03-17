@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKeuangansTable extends Migration
+class CreateOutputsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateKeuangansTable extends Migration
      */
     public function up()
     {
-        Schema::create('keuangans', function (Blueprint $table) {
+        Schema::create('outputs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pj')->nullable()->constrained('users');
-            $table->bigInteger('debit')->default(0);
-            $table->bigInteger('credit')->default(0);
-            $table->bigInteger('saldo');
+            $table->foreignId('pj')->constrained('users')->onDelete('cascade');
+            $table->integer('pengeluaran');
+            $table->integer('jumlah')->default(0);
+            $table->string('keterangan');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateKeuangansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('keuangans');
+        Schema::dropIfExists('outputs');
     }
 }

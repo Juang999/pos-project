@@ -18,9 +18,9 @@
 </li>
 
 <li class="nav-item">
-    <a href="/super-admin/leader" class="nav-link">
+    <a href="/super-admin/transaction" class="nav-link">
         <i class="far fa-circle nav-icon"></i>
-        <p>Leader</p>
+        <p>transaction</p>
     </a>
 </li>
 
@@ -48,6 +48,11 @@
 
 @section('content')
 
+@if (session('status'))
+<div class="alert alert-success">
+    {{ session('status') }}
+</div>
+@endif
 <div class="card-body" style="margin-bottom: 50px">
     <h3 style="margin-left: 20px">Pemimpin</h3>
     <a href="/super-admin/createOfficer" class="btn btn-success" style="margin-bottom: 13px">Daftarkan</a>
@@ -81,8 +86,14 @@
                     leader
               @endif
           </td>
-          <td><a href="#" class="btn btn-danger">Hapus</a></td>
-          <td><a href="#" class="btn btn-primary">Edit</a></td>
+          <td>
+              <form action="/super-admin/deleteOfficer/{{ $officer->id }}" method="post">
+                  <button type="submit" class="btn btn-danger">Hapus</button>
+                  @method('delete')
+                  @csrf
+              </form>
+          </td>
+          <td><a href="/super-admin/showOfficer/{{ $officer->id }}" class="btn btn-primary">Edit</a></td>
         </tr>
         @endforeach
       </tbody>

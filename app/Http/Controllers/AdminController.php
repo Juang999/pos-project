@@ -5,10 +5,14 @@ namespace App\Http\Controllers;
 use App\Barang;
 use App\Supplier;
 use App\Kategori;
+use App\Keuangan;
+use App\Output;
 use App\Pembelian;
+use App\Penjualan;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -240,7 +244,7 @@ class AdminController extends Controller
     {
         $my_id = Auth::user()->id;
 
-        $officer = User::where('role', '!=', 5)->get();
+        $officer = User::where('role', '!=', 5)->where('role', '!=', 1)->get();
 
         return view('superadmin.officer', compact('officer'));
     }
@@ -257,7 +261,7 @@ class AdminController extends Controller
             'nomor_telepon' => 'required',
             'email' => 'required',
             'password' => 'required',
-            'password_confirmation' => 'required'
+            'password_confirmation' => 'required',
         ]);
 
         if ($request->password != $request->password_confirmation) {
@@ -266,10 +270,153 @@ class AdminController extends Controller
 
         try {
             User::create([
-                
+                'name' => $request->name,
+                'nomor_telepon' => $request->nomor_telepon,
+                'email' => $request->email,
+                'password' => $request->password,
+                'role' => $request->role
             ]);
+
+            return redirect('/super-admin/officer')->with('status', 'karyawan berhasil didaftarkan');
         } catch (\Throwable $th) {
-            //throw $th;
+            return redirect('/super-admin/officer')->with('status', $th->getMessage());
         }
+    }
+
+    public function deleteOfficer($id)
+    {
+        try {
+            User::where('id', $id)->delete();
+
+            return back()->with('status', 'karyawan berhasil dihapus');
+        } catch (\Throwable $th) {
+            return back()->with('status', $th->getMessage());
+        }
+    }
+
+    public function showOfficer($id)
+    {
+        $officer = User::where('id', $id)->first();
+
+        return view('superadmin.showOfficer', compact('officer'));
+    }
+
+    public function editOfficer(Request $request, $id)
+    {
+        // dd($request);
+
+        $request->validate([
+            'name' => 'required',
+            'nomor_telepon' => 'required',
+            'email' => 'required',
+            'role' => 'required',
+        ]);
+
+        try {
+            User::where('id', $id)->update([
+                'name' => $request->name,
+                'nomor_telepon' => $request->nomor_telepon,
+                'email' => $request->email,
+                'role' => $request->role,
+            ]);
+
+            return redirect('/super-admin/officer')->with('status', 'karyawan berhasil diupdate');
+        } catch (\Throwable $th) {
+            return redirect('/super-admin/officer')->with('status', $th->getMessage());
+        }
+    }
+
+    public function getTransaction()
+    {
+        $pembelian = Pembelian::where('status', 1)->get();
+
+        $penjualan = Penjualan::where('status', 1)->get();
+
+        $debit = Keuangan::sum('debit');
+
+        $credit = Keuangan::sum('credit');
+
+        $saldo = Keuangan::latest()->first();
+
+        $output = Output::all();
+
+        // dd($output);
+
+        return view('superadmin.transaction', compact('pembelian', 'penjualan', 'debit', 'credit', 'saldo', 'output'));
+    }
+
+    public function createTransaction(Request $request)
+    {
+        return view('superadmin.createTransaction');
+    }
+
+    public function storeTransaction(Request $request)
+    {
+        $request->validate([
+            'keterangan' => 'required',
+            'jumlah' => 'required',
+            'total' => 'required',
+        ]);
+
+        $saldo = Keuangan::latest()->first();
+
+        if ($request->total > $saldo->saldo) {
+            return redirect('/super-admin/createTransaction')->with('status', 'Keuangan Perusahaan tidak mencukupi');
+        }
+
+        $pj = Auth::user()->id;
+
+        $kurang = $saldo->saldo - $request->total;
+
+        try {
+
+            Output::create([
+                'pj' => $pj,
+                'pengeluaran' => $request->total,
+                'jumlah' => $request->jumlah,
+                'keterangan' => $request->keterangan,
+            ]);
+
+            Keuangan::create([
+                'pj' => $pj,
+                'credit' => $request->total,
+                'saldo' => $kurang,
+            ]);
+
+            return redirect('/super-admin/transaction')->with('status', 'data pengeluaran berhasil diinputkan');
+
+        } catch (\Throwable $th) {
+            return redirect('/super-admin/transaction')->with('status', $th->getMessage());
+        }
+    }
+
+    public function deleteTransaction($id)
+    {
+
+        $pj_id = Output::where('id', $id)->first();
+
+        try {
+        DB::beginTransaction();
+
+        $output = Output::where('id', $id)->delete();
+
+        $keuangan_id = Keuangan::where('pj', $pj_id->pj)->latest()->first();
+
+        $hasil = Keuangan::where('id', $keuangan_id->id)->delete();
+
+        DB::commit();
+
+        return redirect('/super-admin/transaction')->with('status', 'data berhasil dihapus');
+        } catch (\Throwable $th) {
+        DB::rollback();
+        return redirect('/super-admin/transaction')->with('status', $th->getMessage());
+        }
+    }
+
+    public function showTransaction($id)
+    {
+        $trans = Output::where('id', $id)->first();
+
+        return view('superadmin.showTransaction', compact('trans'));
     }
 }

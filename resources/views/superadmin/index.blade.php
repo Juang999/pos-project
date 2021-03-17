@@ -18,9 +18,9 @@
 </li>
 
 <li class="nav-item">
-    <a href="/super-admin/leader" class="nav-link">
+    <a href="/super-admin/transaction" class="nav-link">
         <i class="far fa-circle nav-icon"></i>
-        <p>Leader</p>
+        <p>transaction</p>
     </a>
 </li>
 

@@ -56,4 +56,16 @@ Route::group(['prefix' => 'super-admin', 'middleware' => ['auth', 'role:5']], fu
     //crudOfficer
     Route::get('createOfficer', 'AdminController@createOfficer');
     Route::post('storeOfficer', 'AdminController@storeOfficer');
+    Route::delete('deleteOfficer/{id}', 'AdminController@deleteOfficer');
+    Route::get('showOfficer/{id}', 'AdminController@showOfficer');
+    Route::patch('editOfficer/{id}', 'AdminController@editOfficer');
+
+    //--=[ TRANSACTION ]=--
+    Route::get('transaction', 'AdminController@getTransaction');
+    //crudTransaction
+    Route::get('createTransaction', 'AdminController@createTransaction');
+    Route::post('storeTransaction', 'AdminController@storeTransaction');
+    Route::delete('deleteTransaction/{id}', 'AdminController@deleteTransaction');
+    Route::get('showTransaction/{id}', 'AdminController@showTransaction');
+
 });
