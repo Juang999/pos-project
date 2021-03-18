@@ -117,14 +117,16 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>1</td>
-        <td>Moscow666</td>
-        <td>Juang</td>
-        <td>Oreo</td>
-        <td>3</td>
-        <td>2000</td>
-      </tr>
+        @foreach ($penjualan as $penjualan)
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $penjualan->user->pj }}</td>
+                <td>{{ $penjualan->member_id }}</td>
+                <td>{{ $penjualan->barang_id }}</td>
+                <td>3</td>
+                <td>2000</td>
+            </tr>
+        @endforeach
       </tbody>
     </table>
   </div>

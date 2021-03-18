@@ -419,4 +419,19 @@ class AdminController extends Controller
 
         return view('superadmin.showTransaction', compact('trans'));
     }
+
+    public function editTransaction(Request $request, $id)
+    {
+        $request->validate([
+            'keterangan' => 'required',
+            'jumlah' => 'required',
+            'pengeluaran' => 'required',
+        ]);
+
+        $pengeluaran = Output::where('id', $id)->first();
+
+        if ($request->pengeluaran > $pengeluaran->pengeluaran) {
+
+        }
+    }
 }
