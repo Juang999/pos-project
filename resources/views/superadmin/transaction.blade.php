@@ -147,13 +147,15 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>1</td>
-        <td>My Hero Salvador</td>
-        <td>Oreo</td>
-        <td>10</td>
-        <td>1000</td>
-      </tr>
+        @foreach ($pembelian as $pembelian)
+          <tr>
+              <td>{{ $loop->iteration }}</td>
+              <td>{{ $pembelian->pj->name }}</td>
+              <td>{{ $pembelian->barang_id->nama_barang }}</td>
+              <td>{{ $pembelian->jumlah }}</td>
+              <td>{{ $pembelian->harga }}</td>
+            </tr>
+        @endforeach
       </tbody>
     </table>
   </div>
