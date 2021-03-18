@@ -151,7 +151,7 @@
           <tr>
               <td>{{ $loop->iteration }}</td>
               <td>{{ $pembelian->pj}}</td>
-              <td>{{ $pembelian->barang_id->nama_barang }}</td>
+              <td>{{ $pembelian->barang_id }}</td>
               <td>{{ $pembelian->jumlah }}</td>
               <td>{{ $pembelian->harga }}</td>
             </tr>
