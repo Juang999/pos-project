@@ -120,7 +120,7 @@
         @foreach ($penjualan as $penjualan)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $penjualan->pj->name }}</td>
+                <td>{{ $penjualan->pj }}</td>
                 <td>{{ $penjualan->member_id }}</td>
                 <td>{{ $penjualan->barang_id }}</td>
                 <td>3</td>
@@ -150,7 +150,7 @@
         @foreach ($pembelian as $pembelian)
           <tr>
               <td>{{ $loop->iteration }}</td>
-              <td>{{ $pembelian->pj }}</td>
+              <td>{{ $pembelian->pj->name }}</td>
               <td>{{ $pembelian->barang_id->nama_barang }}</td>
               <td>{{ $pembelian->jumlah }}</td>
               <td>{{ $pembelian->harga }}</td>
