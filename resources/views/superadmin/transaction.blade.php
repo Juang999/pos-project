@@ -120,7 +120,7 @@
         @foreach ($penjualan as $penjualan)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $penjualan->user->pj }}</td>
+                <td>{{ $penjualan->user->name }}</td>
                 <td>{{ $penjualan->member_id }}</td>
                 <td>{{ $penjualan->barang_id }}</td>
                 <td>3</td>
