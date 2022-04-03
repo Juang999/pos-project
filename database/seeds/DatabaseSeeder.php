@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\SupplierController;
-use App\Kategori;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,11 +12,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            RoleSeeder::class,
+        ]);
+
+        $this->call([
             UserSeeder::class,
-            TabunganSeeder::class,
-            KategoriSeeder::class, 
-            SupplierSeeder::class,
-            KeuanganSeeder::class,
+            // TabunganSeeder::class,
+            // KategoriSeeder::class,
+            // SupplierSeeder::class,
+            // KeuanganSeeder::class,
         ]);
     }
 }
