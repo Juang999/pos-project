@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Web;
+namespace App\Http\Controllers\Api;
 
 use User;
 use Barang;
@@ -9,10 +9,15 @@ use Kategori;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class WarehouseAdminController extends Controller
+class warehouseAdminController extends Controller
 {
     public function index()
     {
 
+    }
+
+    public function store(Request $r)
+    {
+        
     }
 }

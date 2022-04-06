@@ -15,7 +15,7 @@ class CreateKeuangansTable extends Migration
     {
         Schema::create('keuangans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pj')->nullable()->constrained('users');
+            $table->foreignId('user_id')->nullable()->constrained('users');
             $table->bigInteger('debit')->default(0);
             $table->bigInteger('credit')->default(0);
             $table->bigInteger('saldo');

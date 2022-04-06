@@ -15,11 +15,13 @@ class CreatePembeliansTable extends Migration
     {
         Schema::create('pembelians', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pj')->constrained('users')->onDelete('cascade');
-            $table->integer('status')->default(0);
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('barang_id')->constrained('barangs')->onDelete('cascade');
-            $table->integer('jumlah');
-            $table->integer('harga');
+            $table->foreignId('supplier_id')->constrained('suppliers');
+            $table->integer('amount');
+            $table->double('unit_price');
+            $table->double('total');
+            $table->boolean('has_arrived');
             $table->timestamps();
         });
     }

@@ -12,7 +12,7 @@ class KeuanganSeeder extends Seeder
     public function run()
     {
         DB::table('keuangans')->insert([
-            'pj' => 1,
+            'user_id' => 1,
             'debit' => 2000000,
             'saldo' => 2000000,
         ]);

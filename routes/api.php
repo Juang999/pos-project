@@ -21,78 +21,38 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/', 'StafController@index')->middleware('jwt.verify');
 
-Route::post('register', 'UserControllerAPI@register');
-Route::post('login', 'UserControllerAPI@login');
+Route::post('register', 'Api\UserController@register');
+Route::post('login', 'Api\UserController@login');
 Route::get('book', 'BookController@book');
 
 Route::get('bookall', 'BookController@bookAuth')->middleware('jwt.verify');
-Route::get('user', 'UserControllerAPI@getAuthenticatedUser')->middleware('jwt.verify');
+Route::get('user', 'Api\UserController@getAuthenticatedUser')->middleware('jwt.verify');
 
-//mengambil semua jumlah barang
-Route::get('get-all-jumlah', 'BarangController@getJumlah');
 
-Route::post('password/email', 'UserControllerAPI@resetPassword');
+// Route::post('password/email', 'UserControllerAPI@resetPassword');
 
-Route::group(['prefix' => 'member', 'middleware' => ['jwt.verify', 'role:1']], function () {
-    Route::resource('/', 'TabunganController');
+// Supplier endpoint
+Route::group(['prefix' => 'supplier', 'middleware' => ['jwt.verify']], function() {
+    Route::get('/', 'Api\SupplierController@index');
+    Route::get('/show-supplier/{id}', 'Api\SupplierController@show');
+    Route::post('/store-supplier', 'Api\SupplierController@store');
+    Route::put('/update-supplier/{id}', 'Api\SupplierController@update');
+    Route::delete('/delete-supplier/{id}', 'Api\SupplierController@destroy');
 });
 
-Route::group(['prefix' => 'kasir', 'middleware' => ['jwt.verify', 'role:2']], function () {
-    //Sell
-    Route::post('sale', 'KasirController@store');
-    Route::get('sales', 'KasirController@getTotal');
-    Route::patch('sale/{id}/update', 'KasirController@updateSale');
-    Route::delete('sale/{id}/delete', 'KasirController@deleteSale');
-    Route::patch('pay', 'KasirController@payTotal');
-    Route::patch('pay-member', 'KasirController@payMember');
-
-    //InputSaldo
-    Route::post('input-saldo-member', 'KasirController@inputSaldoMember');
-
-    //History
-    Route::get('get-story', 'KasirController@getHistory');
-
-    //Absensi
-    Route::post('absent', 'KasirController@absent');
+// Category endpoint
+Route::group(['prefix' => 'category', 'middleware' => ['jwt.verify']], function() {
+    Route::get('/', 'Api\CategoryController@index');
+    Route::post('/store-category', 'Api\CategoryController@store');
+    Route::put('/update-category/{id}', 'Api\CategoryController@update');
+    Route::delete('/delete-category/{id}', 'Api\CategoryController@destroy');
 });
 
-Route::group(['prefix' => 'leader', 'middleware' => ['jwt.verify', 'role:4']], function () {
-    //Histories
-    Route::get('get-trans-penjualan', 'LeaderController@getTransPenjualan');
-    Route::get('get-trans-pembelian', 'LeaderController@getTransPembelian');
-    Route::get('get-profit', 'LeaderController@profit');
-
-    //tambahKaryawan
-    Route::post('officer', 'LeaderController@registerKaryawan');
+Route::group(['prefix'=> 'goods', 'middleware' => ['jwt.verify']], function() {
+    Route::get('/', 'Api\GoodsController@index');
+    Route::post('/store-goods', 'Api\GoodsController@store');
 });
 
-Route::group(['prefix' => 'staf', 'middleware' => ['jwt.verify']], function () {
-    //Supplier
-    Route::post('supplier', 'StafController@create');
-    Route::get('suppliers', 'StafController@index');
-    Route::patch('supplier/{id}/update', 'StafController@updateSupplier');
-    Route::delete('supplier/{id}/delete', 'StafController@deleteSupplier');
-
-    //Category
-    Route::post('category', 'StafController@postCategory');
-    Route::get('categories', 'StafController@getCategory');
-    Route::patch('category/{id}/update', 'StafController@updateCategory');
-    Route::delete('category/{id}/delete', 'StafController@deleteCategory');
-
-    //Stuff
-    Route::post('goods', 'StafController@createBarang');
-    Route::get('goods', 'StafController@getBarang');
-    Route::patch('goods/{id}/update', 'StafController@editStuff');
-    Route::delete('goods/{id}/delete', 'StafController@deleteStuff');
-
-    //Buy Stuff
-    Route::post('order', 'StafController@buyStuff');
-    Route::get('orders', 'StafController@getTotal');
-    Route::patch('order/{id}/update', 'StafController@updateOrder');
-    Route::delete('order/{id}/delete', 'StafController@deleteOrder');
-    Route::patch('pay', 'StafController@payTotal');
-
-    //History
-    Route::get('histories', 'StafController@getRiwayat');
+Route::group(['prefix' => 'warehouse-admin', 'middleware' => ['jwt.verify']], function() {
 
 });

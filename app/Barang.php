@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Barang extends Model
 {
+    protected $fillable = [
+        'goods_name',
+        'category_id',
+        'barcode',
+        'unit_price',
+        'selling_price',
+        'status',
+    ];
+
     public function Transaksi()
     {
         return $this->belongsTo('App\Transaksi');
@@ -15,8 +24,6 @@ class Barang extends Model
     {
         return $this->belongsTo('App\Kategori');
     }
-
-    protected $fillable = ['kategori_id', 'supplier_id', 'nama_barang', 'barcode', 'harga_beli', 'harga_jual'];
 
     public function Pembelian()
     {

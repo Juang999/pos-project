@@ -15,13 +15,12 @@ class CreateBarangsTable extends Migration
     {
         Schema::create('barangs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kategori_id')->constrained('kategoris')->onDelete('cascade');
-            $table->foreignId('supplier_id')->nullable()->constrained('suppliers')->onDelete('cascade');
+            $table->string('goods_name')->unique();
+            $table->foreignId('category_id')->constrained('kategoris')->onDelete('cascade');
             $table->bigInteger('barcode')->unique();
-            $table->string('nama_barang')->unique();
-            $table->integer('jumlah')->default(0);
-            $table->double('harga_beli');
-            $table->double('harga_jual');
+            $table->double('unit_price');
+            $table->double('selling_price')->default(0);
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }
